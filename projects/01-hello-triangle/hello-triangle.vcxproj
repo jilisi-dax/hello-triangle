@@ -20,7 +20,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -57,7 +57,7 @@
       <!-- /utf-8: main.cpp 是 UTF-8 编码(含中文注释)；/MD: 与 GLFW 预编译库的 CRT 链接方式保持一致，避免 LNK4098/LNK2019 -->
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir);$(SolutionDir)Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,24 +94,31 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Client\ActionMap.cpp" />
+    <ClCompile Include="Client\camera.cpp" />
     <ClCompile Include="Client\Scene.cpp" />
-    <ClCompile Include="keyBoard.cpp" />
+    <ClCompile Include="Client\Input.cpp" />
+    <ClCompile Include="Client\keyBoard.cpp" />
     <ClCompile Include="..\..\thirdparty\glad\src\glad.c" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="randerComponent.cpp" />
-    <ClCompile Include="role.cpp" />
+    <ClCompile Include="Client\main.cpp" />
+    <ClCompile Include="Client\mesh.cpp" />
+    <ClCompile Include="Client\randerComponent.cpp" />
+    <ClCompile Include="Client\role.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.h" />
+    <ClInclude Include="Client\ActionMap.h" />
+    <ClInclude Include="Client\camera.h" />
     <ClInclude Include="Client\Scene.h" />
-    <ClInclude Include="keyBoard.h" />
-    <ClInclude Include="main.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="randerComponent.h" />
-    <ClInclude Include="role.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="sys.h" />
+    <ClInclude Include="Client\Input.h" />
+    <ClInclude Include="Client\keyBoard.h" />
+    <ClInclude Include="Client\log.h" />
+    <ClInclude Include="Client\main.h" />
+    <ClInclude Include="Client\mesh.h" />
+    <ClInclude Include="Client\pch.h" />
+    <ClInclude Include="Client\randerComponent.h" />
+    <ClInclude Include="Client\role.h" />
+    <ClInclude Include="Client\Shader.h" />
+    <ClInclude Include="Client\sys.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

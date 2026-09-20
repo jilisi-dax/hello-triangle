@@ -18,51 +18,72 @@
     <ClCompile Include="..\..\thirdparty\glad\src\glad.c">
       <Filter>ThirdParty</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Client\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
+    <ClCompile Include="Client\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="keyBoard.cpp">
+    <ClCompile Include="Client\keyBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="role.cpp">
+    <ClCompile Include="Client\role.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Client\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="randerComponent.cpp">
+    <ClCompile Include="Client\randerComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\ActionMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
+    <ClInclude Include="Client\main.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="Client\Shader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
+    <ClInclude Include="Client\camera.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="keyBoard.h">
+    <ClInclude Include="Client\keyBoard.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="role.h">
+    <ClInclude Include="Client\role.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="Client\pch.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="sys.h">
+    <ClInclude Include="Client\sys.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Client\Scene.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="randerComponent.h">
+    <ClInclude Include="Client\randerComponent.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\Input.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\ActionMap.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\log.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\mesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
