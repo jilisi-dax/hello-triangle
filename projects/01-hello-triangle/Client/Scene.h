@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include "Shader.h"
 
 class SceneObject;
 class CameraComponent;

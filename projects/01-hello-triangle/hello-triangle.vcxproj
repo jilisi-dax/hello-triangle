@@ -96,6 +96,8 @@
   <ItemGroup>
     <ClCompile Include="Client\ActionMap.cpp" />
     <ClCompile Include="Client\camera.cpp" />
+    <ClCompile Include="Client\Material.cpp" />
+    <ClCompile Include="Client\ResourceLib.cpp" />
     <ClCompile Include="Client\Scene.cpp" />
     <ClCompile Include="Client\Input.cpp" />
     <ClCompile Include="Client\keyBoard.cpp" />
@@ -104,10 +106,13 @@
     <ClCompile Include="Client\mesh.cpp" />
     <ClCompile Include="Client\randerComponent.cpp" />
     <ClCompile Include="Client\role.cpp" />
+    <ClCompile Include="Client\sys.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client\ActionMap.h" />
     <ClInclude Include="Client\camera.h" />
+    <ClInclude Include="Client\Material.h" />
+    <ClInclude Include="Client\ResourceLib.h" />
     <ClInclude Include="Client\Scene.h" />
     <ClInclude Include="Client\Input.h" />
     <ClInclude Include="Client\keyBoard.h" />

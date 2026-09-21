@@ -1,7 +1,4 @@
 #pragma once
-#include "pch.h"
+#include <string>
 
-using namespace std;
-string getAssetPath() {
-	return "../../asset/";
-};
+std::string getAssetPath();

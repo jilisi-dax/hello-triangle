@@ -1,10 +1,10 @@
 
 #pragma once
-#include <string>
-#include <fstream>
-#include <sstream>
 #define GLAD_APIENTRY_DEFINED
 #include <glad/glad.h>
+
+#include "pch.h"
+#include "log.h"
 
 // 检查着色器程序的链接状态，失败就打印错误日志
 inline void checkProgramLink(unsigned int program)

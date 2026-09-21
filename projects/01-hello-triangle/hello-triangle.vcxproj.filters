@@ -45,6 +45,15 @@
     <ClCompile Include="Client\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Client\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\sys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\ResourceLib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client\main.h">
@@ -84,6 +93,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Client\mesh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\Material.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\ResourceLib.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

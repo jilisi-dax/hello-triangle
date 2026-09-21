@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "main.h"
-#include "Shader.h"
 #include "camera.h"
 #include "keyBoard.h"
 #include "role.h"
 #include "Scene.h"
 #include "Input.h" 
+#include "ResourceLib.h"
+#include "ActionMap.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -37,7 +38,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	Input::Init(window);
 	ActionMap::Init();
-	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -54,6 +55,7 @@ int main()
 	Scene scene;
 	cubeModel* cube = new cubeModel();
 	scene.add(cube);
+	scene.add(new metalCube());
 	scene.add(new modelObj());
 	scene.add(new ground());
 	scene.add(cameraObj);
@@ -66,8 +68,9 @@ int main()
 	{
 		SceneObject* lightObj = new SceneObject();
 		LightComponent* light = new LightComponent();
-		lightObj->SetPos(glm::vec3(-2.0f, -2.0f, -5.0f));
+		lightObj->SetPos(glm::vec3(0.0f, 0.5f, 8.0f));
 		light->lightColor = glm::vec3(1.0f);
+		light->range = 20.0f;
 		lightObj->addComponent(light);
 		scene.add(lightObj);
 		// 灯 2
@@ -114,6 +117,7 @@ int main()
 	}
 	
 	scene.clear(); 
+	ResourceLib::Shutdown();
 	glfwTerminate();
 	return 0;
 
