@@ -19,7 +19,7 @@ cubeModel::cubeModel()
 	SetRotation(glm::vec3(0, 45, 45));
 	SetScale(glm::vec3(1.0f, 2.0f, 0.5f));
 
-	addComponent(new CubeRenderer(glm::vec3(1.0f, 1.0f, 1.0f), 8.0f, 0.3f));
+	addComponent(new CubeRenderer("mat/plastic.mat"));
 	SpinComponent* spin = new SpinComponent();
 	spin->axis = glm::vec3(1.0f, -1.0f, 0.0f);
 	spin->speed = 45.0f;
@@ -30,7 +30,7 @@ metalCube::metalCube()
 	name = "metalCube";
 	SetPos(glm::vec3(0.0f, 0.0f, 2.0f));
 
-	addComponent(new CubeRenderer(glm::vec3(1.0f, 1.0f, 1.0f), 128.0f, 1.5f));
+	addComponent(new CubeRenderer("mat/metal.mat"));
 }
 ground::ground()
 {

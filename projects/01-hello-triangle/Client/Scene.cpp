@@ -32,8 +32,8 @@ void Scene::render()
     {
         for (auto c : obj->components)
         {
-            if (dynamic_cast<LightComponent*>(c))
-                lights.push_back(dynamic_cast<LightComponent*>(c));
+            if (LightComponent * cL = dynamic_cast<LightComponent*>(c))
+                lights.push_back(dynamic_cast<LightComponent*>(cL));
         }
     }
 

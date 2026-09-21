@@ -57,7 +57,7 @@
       <!-- /utf-8: main.cpp 是 UTF-8 编码(含中文注释)；/MD: 与 GLFW 预编译库的 CRT 链接方式保持一致，避免 LNK4098/LNK2019 -->
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)Client;$(SolutionDir)..\..\thirdparty;$(SolutionDir)..\..\thirdparty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)..\..\thirdparty;$(SolutionDir)Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

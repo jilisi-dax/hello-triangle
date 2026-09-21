@@ -7,7 +7,7 @@
 #include "log.h"
 
 // 检查着色器程序的链接状态，失败就打印错误日志
-inline void checkProgramLink(unsigned int program)
+inline bool checkProgramLink(unsigned int program)
 {
     int success;
     char infoLog[512];
@@ -16,10 +16,12 @@ inline void checkProgramLink(unsigned int program)
     {
         glGetProgramInfoLog(program, 512, NULL, infoLog);
         LOG_ERROR("着色器程序链接失败：\n%s\n", infoLog);
+        return false;
     }
+    return true;
 }
 // 检查单个着色器的编译状态，失败就打印错误日志
-inline void checkShaderCompile(unsigned int shader, const char* name)
+inline bool checkShaderCompile(unsigned int shader, const char* name)
 {
     int success;
     char infoLog[512];
@@ -28,12 +30,14 @@ inline void checkShaderCompile(unsigned int shader, const char* name)
     {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         LOG_ERROR("%s 编译失败：\n%s\n", name, infoLog);
+        return false;
     }
+    return true;
 }
 class Shader {
 public:
     unsigned int ID;
-
+    bool m_valid = false;
     // 传入两个文件路径，构造时自动完成 读文件→编译→链接
     Shader(const char* vertexPath, const char* fragmentPath)
     {
@@ -45,12 +49,12 @@ public:
         unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &vSrc, NULL);
         glCompileShader(vertexShader);
-        checkShaderCompile(vertexShader, "顶点着色器");
+        bool vOk = checkShaderCompile(vertexShader, "顶点着色器");
 
         unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fs, 1, &fSrc, NULL);
         glCompileShader(fs);
-        checkShaderCompile(fs, "片段着色器");
+        bool fOk = checkShaderCompile(fs, "片段着色器");
 
         ID = glCreateProgram();
         glAttachShader(ID, vertexShader);
@@ -60,6 +64,12 @@ public:
 
         glDeleteShader(vertexShader);
         glDeleteShader(fs);
+
+        m_valid = vOk && fOk && checkProgramLink(ID);
+    }
+    ~Shader()
+    {
+        glDeleteProgram(ID);
     }
 
     void UseProgram() { glUseProgram(ID); }

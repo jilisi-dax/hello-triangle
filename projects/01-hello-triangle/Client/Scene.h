@@ -54,8 +54,8 @@ public:
 class SceneObject
 {
 public:
-	SceneObject() {};
-	~SceneObject()
+	SceneObject() {}
+	virtual ~SceneObject()
 	{
 		for (auto c : components)
 			delete c;

@@ -1,3 +1,16 @@
+# Visual Studio 中间产物
 .vs/
-build/
 *.user
+*.suo
+*.ipch
+*.VC.db*
+*.VC.opendb
+
+# 构建输出
+build/
+x64/
+Debug/
+Release/
+
+# 系统杂项
+Thumbs.db

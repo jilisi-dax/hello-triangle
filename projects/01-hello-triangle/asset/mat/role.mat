@@ -1,0 +1,7 @@
+{
+  "vertex": "shaders/role.vert",
+  "fragment": "shaders/role.frag",
+  "texture": "role/Forest_Spr/Forest_Spr.png",
+  "shininess": 64.0,
+  "specularStrength": 1.0
+}

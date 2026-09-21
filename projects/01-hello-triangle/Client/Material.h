@@ -16,7 +16,7 @@ public:
 
 	void bind();
 
-	static Material* CreateTextured(const char* vertPath, const char* fragPath, const char* texPath);
-	static Material* CreateGrid(const char* vertPath, const char* fragPath);
+//private:
+	static Material* CreateFromJson(const char* matPath);
 	static unsigned int LoadTexture(const char* path);
 };

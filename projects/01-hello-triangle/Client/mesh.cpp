@@ -110,7 +110,7 @@ bool Mesh::ParseOBJ(const char* path, std::vector<float>& vertices)
     std::vector<glm::vec3> normals;
     std::string line;
     std::ifstream file(path);
-    if (!file.is_open()) return false;
+    if (!file.is_open()) return false; 
 
     while (std::getline(file, line))
     {
@@ -134,21 +134,50 @@ bool Mesh::ParseOBJ(const char* path, std::vector<float>& vertices)
             normals.push_back(n);
         }
         else if (prefix == "f") {
-            // 每个角格式: vIdx/uvIdx/nIdx，OBJ从1开始，要减1
-            for (int i = 0; i < 3; i++) {
-                unsigned int vi, ti, ni;
-                char slash;
-                iss >> vi >> slash >> ti >> slash >> ni;
-                vi--; ti--; ni--;
-                // 按 位置3 + 法线3 + UV2 = 8个float 交错写入
-                vertices.push_back(positions[vi].x);
-                vertices.push_back(positions[vi].y);
-                vertices.push_back(positions[vi].z);
-                vertices.push_back(normals[ni].x);
-                vertices.push_back(normals[ni].y);
-                vertices.push_back(normals[ni].z);
-                vertices.push_back(texCoords[ti].x);
-                vertices.push_back(texCoords[ti].y);
+            struct Corner { int vi, ti, ni; };
+            std::vector<Corner> corners;
+            std::string tok;
+            while (iss >> tok) {
+                Corner c{ 0, 0, 0 };
+                if (sscanf_s(tok.c_str(), "%d/%d/%d", &c.vi, &c.ti, &c.ni) != 3) {
+                    LOG_ERROR("ParseOBJ: unsupported face token '%s' in %s", tok.c_str(), path);
+                    return false;   // v、v/vt、v//vn 等格式一律拒绝，不静默置 0
+                }
+                corners.push_back(c);
+            }
+            if (corners.size() < 3) {
+                LOG_ERROR("ParseOBJ: degenerate face in %s", path);
+                return false;
+            }
+
+            // OBJ 索引从 1 开始；负索引 = 倒数第 n 个，统一转成 0-based
+            auto resolve = [](int idx, size_t count) {
+                return idx > 0 ? idx - 1 : idx + (int)count;
+                };
+
+            // 扇形三角化：n 边形拆成 n-2 个三角形 (v0, vi, vi+1)
+            for (size_t i = 1; i + 1 < corners.size(); i++) {
+                Corner tri[3] = { corners[0], corners[i], corners[i + 1] };
+                for (const Corner& c : tri) {
+                    int vi = resolve(c.vi, positions.size());
+                    int ti = resolve(c.ti, texCoords.size());
+                    int ni = resolve(c.ni, normals.size());
+                    if (vi < 0 || vi >= (int)positions.size() ||
+                        ti < 0 || ti >= (int)texCoords.size() ||
+                        ni < 0 || ni >= (int)normals.size()) {
+                        LOG_ERROR("ParseOBJ: index out of range in %s", path);
+                        return false;
+                    }
+                    // 按 位置3 + 法线3 + UV2 = 8个float 交错写入
+                    vertices.push_back(positions[vi].x);
+                    vertices.push_back(positions[vi].y);
+                    vertices.push_back(positions[vi].z);
+                    vertices.push_back(normals[ni].x);
+                    vertices.push_back(normals[ni].y);
+                    vertices.push_back(normals[ni].z);
+                    vertices.push_back(texCoords[ti].x);
+                    vertices.push_back(texCoords[ti].y);
+                }
             }
         }
     }

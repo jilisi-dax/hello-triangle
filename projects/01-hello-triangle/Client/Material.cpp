@@ -1,5 +1,6 @@
 #include "Material.h"
 #include "ResourceLib.h"
+#include <sys.h>
 
 void Material::bind()
 {
@@ -37,23 +38,48 @@ unsigned int Material::LoadTexture(const char* path)
     else
     {
         LOG_ERROR("Texture load error: %s", path);
+        glDeleteTextures(1, &tex);
+        tex = 0;   // 失败返回 0，调用方才拦得住
     }
     stbi_image_free(data);
     return tex;
 
 }
 
-Material* Material::CreateTextured(const char* vertPath, const char* fragPath, const char* texPath)
+Material* Material::CreateFromJson(const char* matPath)
 {
-    Material* m = new Material();
-    m->m_shader = ResourceLib::GetShader(vertPath, fragPath);
-    m->diffuseMap = ResourceLib::GetTexture(texPath);
-    return m;
-}
+    std::ifstream file(getAssetPath() + matPath);
+    if (!file.is_open())
+    {
+        LOG_ERROR("Material file not found: %s", matPath);
+        return nullptr;
+    }
 
-Material* Material::CreateGrid(const char* vertPath, const char* fragPath)
-{
+    nlohmann::json j;
+    try { file >> j; }
+    catch (const nlohmann::json::parse_error& e)
+    {
+        LOG_ERROR("Material JSON parse error in %s: %s", matPath, e.what());
+        return nullptr;
+    }
+
     Material* m = new Material();
-    m->m_shader = new Shader(vertPath, fragPath);
+
+    std::string vert = getAssetPath() + j.value("vertex", "shaders/cube.vert");
+    std::string frag = getAssetPath()  + j.value("fragment", "shaders/cube.frag");
+    m->m_shader = ResourceLib::GetShader(vert.c_str(), frag.c_str());
+    if (!m->m_shader) {
+        delete m;
+        return nullptr;
+    }
+    if (j.contains("texture"))
+    {
+        std::string tex = j["texture"].get<std::string>();
+        m->diffuseMap = ResourceLib::GetTexture(tex.c_str());
+    }
+    if (j.contains("color"))
+        m->color = glm::vec3(j["color"][0], j["color"][1], j["color"][2]);
+    m->shininess = j.value("shininess", 32.0f);
+    m->specularStrength = j.value("specularStrength", 0.5f);
     return m;
 }

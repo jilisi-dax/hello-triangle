@@ -4,14 +4,10 @@
 #include "mesh.h"
 #include "Material.h"
 #include "sys.h"
+#include "ResourceLib.h"
 class MeshRendererComponent : public Component
 {
 public:
-	~MeshRendererComponent()
-	{
-		delete m_mesh;
-		delete m_material;
-	}
 
 	Mesh* m_mesh = nullptr;
 	Material* m_material = nullptr;
@@ -26,9 +22,9 @@ public:
 	std::string m_texturePath;
 	ModelRenderer()
 	{
-		m_material = Material::CreateTextured("../../shaders/role.vert", "../../shaders/role.frag",
-			(getAssetPath() + "role/Forest_Spr/Forest_Spr.png").c_str());
-		m_mesh = Mesh::LoadOBJ((getAssetPath() + "role/Forest_Spr/Forest_Spr_50k.obj").c_str());
+		m_material = ResourceLib::GetMaterial("mat/role.mat");
+		m_meshPath = "role/Forest_Spr/Forest_Spr_50k.obj";
+		m_mesh = ResourceLib::GetMesh(m_meshPath.c_str());
 		if (!m_mesh) { LOG_ERROR("Mesh load error: %s", m_meshPath.c_str()); return; }
 		LOG_INFO("Mesh vertices count: %d", m_mesh->vertexCount);
 		m_material->shininess = 64.0f;
@@ -40,13 +36,10 @@ public:
 class CubeRenderer : public MeshRendererComponent
 {
 public:
-	CubeRenderer(glm::vec3 color = glm::vec3(1.0f), float shininess = 32.0f, float specStrength = 0.5f)
+	CubeRenderer(const char* matKey = "mat/plastic.mat")
 	{
-		m_material = Material::CreateTextured("../../shaders/cube.vert", "../../shaders/cube.frag",
-			(getAssetPath() + "02.png").c_str());
-		m_material->color = color;
-		m_material->shininess = shininess;
-		m_mesh = Mesh::CreateCube();
+		m_material = ResourceLib::GetMaterial(matKey);
+		m_mesh = ResourceLib::GetMesh("builtin:cube");
 	}
 };
 
@@ -56,8 +49,8 @@ class GroundRenderer : public MeshRendererComponent
 public:
 	GroundRenderer()
 	{
-		m_material = Material::CreateGrid("../../shaders/ground.vert", "../../shaders/ground.frag");
-		m_mesh = Mesh::CreateGround();
+		m_material = ResourceLib::GetMaterial("mat/ground.mat");
+		m_mesh = ResourceLib::GetMesh("builtin:ground");
 	}
 };
 

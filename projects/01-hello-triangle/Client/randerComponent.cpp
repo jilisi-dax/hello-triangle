@@ -6,7 +6,7 @@ using namespace std;
 
 void MeshRendererComponent::draw(CameraComponent& cam, std::vector<LightComponent*>& lights)
 {
-	if (!m_material) return;
+	if (!m_material || !m_mesh) return;
 	m_material->bind();
 	unsigned int prog = m_material->m_shader->getProgram();
 

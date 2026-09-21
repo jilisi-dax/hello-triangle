@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <nlohmann/json.hpp>
 #include <string>
 #include "stb_image.h"
 #include <fstream>
@@ -13,5 +14,6 @@
 #include <vector>
 #include <array>
 #include <unordered_map>
+#include <memory>
 
 #include "log.h" 
