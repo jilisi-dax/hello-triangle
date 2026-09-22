@@ -42,10 +42,19 @@ void MeshRendererComponent::draw(CameraComponent& cam, std::vector<LightComponen
 				glUniform3f(glGetUniformLocation(prog,
 					("lightColor[" + to_string(count) + "]").c_str()),
 					lights[i]->lightColor.x, lights[i]->lightColor.y, lights[i]->lightColor.z);
-
+				glUniform3f(glGetUniformLocation(prog,
+					("spotDir[" + to_string(count) + "]").c_str()),
+					lights[i]->direction.x, lights[i]->direction.y, lights[i]->direction.z);
+				glUniform1f(glGetUniformLocation(prog,
+					("spotCutoff[" + to_string(count) + "]").c_str()),
+					lights[i]->cutoff);
+				glUniform1f(glGetUniformLocation(prog,
+					("spotCutoffOuter[" + to_string(count) + "]").c_str()),
+					lights[i]->cutoffOuter);
 				count++;
 			}
 		}
+
 	}
 	glUniform1i(glGetUniformLocation(prog, "lightCount"), count);
 	glUniform1f(glGetUniformLocation(prog, "time"), (float)glfwGetTime());

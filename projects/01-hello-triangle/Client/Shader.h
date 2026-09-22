@@ -41,8 +41,8 @@ public:
     // 传入两个文件路径，构造时自动完成 读文件→编译→链接
     Shader(const char* vertexPath, const char* fragmentPath)
     {
-        std::string vCode = readFile(vertexPath);
-        std::string fCode = readFile(fragmentPath);
+        std::string vCode = processIncludes(readFile(vertexPath), dirOf(vertexPath));
+        std::string fCode = processIncludes(readFile(fragmentPath), dirOf(fragmentPath));
         const char* vSrc = vCode.c_str();
         const char* fSrc = fCode.c_str();
 
@@ -86,8 +86,39 @@ private:
     std::string readFile(const char* path)
     {
         std::ifstream f(path);
+        if (!f.is_open())
+        {
+            LOG_ERROR("Shader file not found: %s", path);
+            return "";
+        }
         std::stringstream ss;
-        ss << f.rdbuf();          // 整个文件倒进字符串流
+        ss << f.rdbuf();
         return ss.str();
+    }
+
+    std::string dirOf(const std::string& path)
+    {
+        size_t p = path.find_last_of("/\\");
+        return (p == std::string::npos) ? "" : path.substr(0, p + 1);
+    }
+    std::string processIncludes(const std::string& code, const std::string& dir)
+    {
+        std::istringstream in(code);
+        std::string out, line;
+        while (std::getline(in, line))
+        {
+            if (line.find("#include") != std::string::npos)
+            {
+                size_t q1 = line.find('"');
+                size_t q2 = line.find('"', q1 + 1);
+                if (q1 != std::string::npos && q2 != std::string::npos)
+                    out += readFile((dir + line.substr(q1 + 1, q2 - q1 - 1)).c_str());
+                else
+                    out += line + "\n";   // 残缺 include 原样放行，让 GLSL 编译器报错
+            }
+            else
+                out += line + "\n";
+        }
+        return out;
     }
 };

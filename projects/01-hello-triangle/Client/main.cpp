@@ -88,6 +88,9 @@ int main()
 		light3->SetPos(glm::vec3(0.0f, 5.0f, 0.0f));
 		l3->lightColor = glm::vec3(1.0f, 1.0f, 0.5f);   // 偏黄
 		l3->range = 10.0f;
+		l3->direction = glm::vec3(0.0f, -1.0f, 0.0f);
+		l3->cutoff = 0.976f;   // ≈ cos(12.5°)
+		l3->cutoffOuter = 0.92f;   // ≈ cos(23°)
 		light3->addComponent(l3);
 		scene.add(light3);
 

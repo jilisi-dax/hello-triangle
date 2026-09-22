@@ -34,6 +34,6 @@ metalCube::metalCube()
 }
 ground::ground()
 {
-	name = "cube";
+	name = "ground";
 	addComponent(new GroundRenderer());
 }

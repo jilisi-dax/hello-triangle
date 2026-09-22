@@ -27,8 +27,6 @@ public:
 		m_mesh = ResourceLib::GetMesh(m_meshPath.c_str());
 		if (!m_mesh) { LOG_ERROR("Mesh load error: %s", m_meshPath.c_str()); return; }
 		LOG_INFO("Mesh vertices count: %d", m_mesh->vertexCount);
-		m_material->shininess = 64.0f;
-		m_material->specularStrength = 1.0f;
 	}
 };
 
