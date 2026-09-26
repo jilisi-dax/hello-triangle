@@ -2,7 +2,7 @@
 #include "sys.h"
 #include "Shader.h"
 #include "camera.h"
-#include "randerComponent.h"
+#include "renderComponent.h"
 
 modelObj::modelObj()
 {
@@ -15,11 +15,11 @@ modelObj::modelObj()
 cubeModel::cubeModel()
 {
 	name = "cube";
-	SetPos(glm::vec3(-2.0f, 0.0f, 0.0f));
+	SetPos(glm::vec3(-2.0f, -1.0f, 0.0f));
 	SetRotation(glm::vec3(0, 45, 45));
 	SetScale(glm::vec3(1.0f, 2.0f, 0.5f));
 
-	addComponent(new CubeRenderer("mat/plastic.mat"));
+	addComponent(new MeshRenderer("mat/plastic.mat"));
 	SpinComponent* spin = new SpinComponent();
 	spin->axis = glm::vec3(1.0f, -1.0f, 0.0f);
 	spin->speed = 45.0f;
@@ -28,12 +28,13 @@ cubeModel::cubeModel()
 metalCube::metalCube()
 {
 	name = "metalCube";
-	SetPos(glm::vec3(0.0f, 0.0f, 2.0f));
+	SetPos(glm::vec3(0.0f, -1.5f, 2.0f));
 
-	addComponent(new CubeRenderer("mat/metal.mat"));
+	addComponent(new MeshRenderer("mat/metal.mat"));
 }
 ground::ground()
 {
 	name = "ground";
+	SetPos(glm::vec3(0.0f, -1.0f, 0.0f));
 	addComponent(new GroundRenderer());
 }

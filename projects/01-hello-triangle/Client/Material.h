@@ -11,6 +11,8 @@ public:
 	glm::vec3 color = glm::vec3(1.0f);// 染色
 	float shininess = 32.0f;// 高光锐度
 	float specularStrength = 0.5f;
+	unsigned int normalMap = 0;
+	int albedoMode = 0;   // 表皮模式：0=纹理 1=checker（将来映射 shader 变体）
 
 	~Material() {}
 

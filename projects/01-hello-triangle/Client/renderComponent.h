@@ -12,7 +12,8 @@ public:
 	Mesh* m_mesh = nullptr;
 	Material* m_material = nullptr;
 
-	void draw(CameraComponent& cam, std::vector<LightComponent*>& lights) override;
+	void draw(CameraComponent& cam, std::vector<LightComponent*>& lights, const ShadowFrame& shadow) override;
+	void drawDepth(const glm::mat4& lightSpaceMat) override;
 };
 
 class ModelRenderer : public MeshRendererComponent
@@ -31,13 +32,13 @@ public:
 };
 
 
-class CubeRenderer : public MeshRendererComponent
+class MeshRenderer : public MeshRendererComponent
 {
 public:
-	CubeRenderer(const char* matKey = "mat/plastic.mat")
+	MeshRenderer(const char* matKey = "mat/plastic.mat", const char* meshKey = "builtin:cube")
 	{
 		m_material = ResourceLib::GetMaterial(matKey);
-		m_mesh = ResourceLib::GetMesh("builtin:cube");
+		m_mesh = ResourceLib::GetMesh(meshKey);
 	}
 };
 

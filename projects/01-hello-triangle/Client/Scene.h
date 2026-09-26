@@ -4,16 +4,26 @@
 class SceneObject;
 class CameraComponent;
 class LightComponent;
+class TextureCube;
+
+struct ShadowFrame
+{
+	bool enabled = false;
+	glm::mat4 lightSpaceMat = glm::mat4(1.0f);
+	glm::vec3 lightDir = glm::vec3(0.0f, -1.0f, 0.0f);
+	unsigned int depthTex = 0;
+};
 
 class Component
 {
 public:
-	SceneObject* owner = nullptr;   // 我挂在谁身上
+	SceneObject* owner = nullptr;
 
 	glm::vec3 GetPos();
 
 	virtual void update(float dt) {}
-	virtual void draw(CameraComponent& cam, std::vector<LightComponent*>& lights) {}
+	virtual void draw(CameraComponent& cam, std::vector<LightComponent*>& lights, const ShadowFrame& shadow) {}
+	virtual void drawDepth(const glm::mat4& lightSpaceMat) {}
 	virtual ~Component() {}
 };
 class LightComponent : public Component
@@ -25,8 +35,9 @@ public:
 	glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f); // 聚光朝向
 	float cutoff = -1.0f;   // 锥角余弦
 	float cutoffOuter = -2.0f;  // 全暗边界锥角
-
+	bool castShadow = false; //阴影贴图缓冲标记
 };
+
 
 
 
@@ -42,14 +53,25 @@ public:
 	std::vector < SceneObject*> Objects;
 private:
 	CameraComponent* m_mainCamera = nullptr;
+	std::vector<LightComponent*> m_lights;
+	ShadowFrame m_shadow;
+	TextureCube* m_skybox = nullptr;
 public:
+	std::vector<LightComponent*>& collectLights();
 	void setMainCamera(CameraComponent* cam) { m_mainCamera = cam; }
-public:
+	CameraComponent* mainCamera() { return m_mainCamera; }
+
+	void setSkybox(const char* cubemapDir);
+	TextureCube* skybox() const { return m_skybox; }
+
 	void add(SceneObject* obj);
 	void remove(SceneObject* obj);
 
 	void update(float dt);
 	void render();
+	void renderDepth(const glm::mat4& lightSpaceMat);
+
+	ShadowFrame& shadowInfo() { return m_shadow; }
 
 	void clear();
 };
@@ -104,11 +126,16 @@ public:
 	}
 
 	//virtual void update(float dt) {}    // 每帧更新逻辑（空的，子类重写）
-	void draw(CameraComponent& cam, std::vector<LightComponent*>& lights)
+	void draw(CameraComponent& cam, std::vector<LightComponent*>& lights, const ShadowFrame& shadow)
 	{
 		if (!isShow) return;
 		for (auto c : components)
-			c->draw(cam, lights);
+			c->draw(cam, lights, shadow);
 	}
-
+	void drawDepth(const glm::mat4& lightSpaceMat)
+	{
+		if (!isShow) return;
+		for (auto c : components)
+			c->drawDepth(lightSpaceMat);
+	}
 };

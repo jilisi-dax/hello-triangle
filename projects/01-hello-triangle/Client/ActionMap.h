@@ -8,6 +8,9 @@ enum class GameAction
     MoveLeft,
     MoveRight,
     Exit,
+    EffectGray,
+    EffectInvert,
+    EffectSharpen,
 };
 
 class ActionMap

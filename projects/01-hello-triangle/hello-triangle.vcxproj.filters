@@ -33,9 +33,6 @@
     <ClCompile Include="Client\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Client\randerComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Client\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,6 +49,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Client\ResourceLib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\ShadowMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\renderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\TextureCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client\Framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,9 +92,6 @@
     <ClInclude Include="Client\Scene.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Client\randerComponent.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Client\Input.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -99,6 +108,21 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Client\ResourceLib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\ShadowMap.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\Renderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\renderComponent.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\TextureCube.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client\Framebuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

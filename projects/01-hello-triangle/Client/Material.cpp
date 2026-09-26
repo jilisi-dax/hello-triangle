@@ -11,6 +11,15 @@ void Material::bind()
     glUniform1i(glGetUniformLocation(m_shader->getProgram(), "ourTexture"), 0);
 
     glUniform1f(glGetUniformLocation(m_shader->getProgram(), "cellSize"), cellSize);
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "albedoMode"), albedoMode);
+
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "normalMapEnabled"), normalMap ? 1 : 0);
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "normalMap"), 2);
+    if (normalMap)
+    {
+        glActiveTexture(GL_TEXTURE2);   // 0 号是漫反射、1 号阴影深度图，法线贴图 2 号
+        glBindTexture(GL_TEXTURE_2D, normalMap);
+    }
 
     glUniform3f(glGetUniformLocation(m_shader->getProgram(), "materialColor"), color.r, color.g, color.b);
     glUniform1f(glGetUniformLocation(m_shader->getProgram(), "shininess"), shininess);
@@ -77,9 +86,12 @@ Material* Material::CreateFromJson(const char* matPath)
         std::string tex = j["texture"].get<std::string>();
         m->diffuseMap = ResourceLib::GetTexture(tex.c_str());
     }
+    if (j.contains("normalMap"))
+        m->normalMap = ResourceLib::GetTexture(j["normalMap"].get<std::string>().c_str());
     if (j.contains("color"))
         m->color = glm::vec3(j["color"][0], j["color"][1], j["color"][2]);
     m->shininess = j.value("shininess", 32.0f);
     m->specularStrength = j.value("specularStrength", 0.5f);
+    m->albedoMode = j.value("albedoMode", 0);
     return m;
 }

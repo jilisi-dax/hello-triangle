@@ -15,6 +15,9 @@ void ActionMap::Init()
     b[GameAction::MoveLeft] = { GLFW_KEY_A, GLFW_KEY_LEFT };
     b[GameAction::MoveRight] = { GLFW_KEY_D, GLFW_KEY_RIGHT };
     b[GameAction::Exit] = { GLFW_KEY_ESCAPE };
+    b[GameAction::EffectGray] = { GLFW_KEY_F1 };
+    b[GameAction::EffectInvert] = { GLFW_KEY_F2 };
+    b[GameAction::EffectSharpen] = { GLFW_KEY_F3 };
 }
 
 bool ActionMap::IsDown(GameAction a)

@@ -1,4 +1,9 @@
 {
-  "vertex": "shaders/ground.vert",
-  "fragment": "shaders/ground.frag"
+  "vertex": "shaders/lit.vert",
+  "fragment": "shaders/lit.frag",
+  "texture": "textures/bricks2.jpg",
+  "color": [1.0, 1.0, 1.0],
+  "shininess": 32.0,
+  "specularStrength": 0.4,
+  "normalMap": "textures/bricks2_normal.jpg"
 }

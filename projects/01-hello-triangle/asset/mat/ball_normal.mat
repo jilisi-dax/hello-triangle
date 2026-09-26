@@ -3,6 +3,7 @@
     "fragment": "shaders/lit.frag",
     "texture": "02.png",
     "color": [1.0, 1.0, 1.0],
-    "shininess": 16.0,
-    "specularStrength": 0.3
+    "shininess": 32.0,
+    "specularStrength": 0.6,
+    "normalMap": "textures/brickwall_normal.jpg"
 }

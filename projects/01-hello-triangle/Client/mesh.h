@@ -30,6 +30,7 @@ public:
 
     static Mesh* CreateCube();
     static Mesh* CreateGround();
+    static Mesh* CreateSphere(int stacks = 48, int slices = 96);
 
     static Mesh* LoadOBJ(const char* path);
     static bool ParseOBJ(const char* path, std::vector<float>& vertices);

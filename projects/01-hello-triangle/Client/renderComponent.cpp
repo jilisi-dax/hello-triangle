@@ -1,10 +1,10 @@
-#include "randerComponent.h"
+#include "renderComponent.h"
 #include "camera.h"
 #include "sys.h"
 
 using namespace std;
 
-void MeshRendererComponent::draw(CameraComponent& cam, std::vector<LightComponent*>& lights)
+void MeshRendererComponent::draw(CameraComponent& cam, std::vector<LightComponent*>& lights, const ShadowFrame& shadow)
 {
 	if (!m_material || !m_mesh) return;
 	m_material->bind();
@@ -59,5 +59,29 @@ void MeshRendererComponent::draw(CameraComponent& cam, std::vector<LightComponen
 	glUniform1i(glGetUniformLocation(prog, "lightCount"), count);
 	glUniform1f(glGetUniformLocation(prog, "time"), (float)glfwGetTime());
 
+	if (shadow.enabled)
+	{
+		glActiveTexture(GL_TEXTURE1);   // 0 号材质贴图用，深度图挂 1 号
+		glBindTexture(GL_TEXTURE_2D, shadow.depthTex);
+		glUniform1i(glGetUniformLocation(prog, "shadowMap"), 1);
+		glUniformMatrix4fv(glGetUniformLocation(prog, "lightSpaceMatrix"),
+			1, GL_FALSE, glm::value_ptr(shadow.lightSpaceMat));
+		glUniform3f(glGetUniformLocation(prog, "shadowLightDir"),
+			shadow.lightDir.x, shadow.lightDir.y, shadow.lightDir.z);
+	}
 	if (m_mesh) m_mesh->draw();
+}
+
+void MeshRendererComponent::drawDepth(const glm::mat4& lightSpaceMat)
+{
+	if (!m_mesh) return;
+
+	Shader* s = ResourceLib::GetShader(
+		(getAssetPath() + "shaders/shadowMap.vert").c_str(),
+		(getAssetPath() + "shaders/shadowMap.frag").c_str());
+	if (!s) return;
+
+	s->UseProgram();
+	s->setUniformMat4("model", owner ? owner->getModelMatrix() : glm::mat4(1.0f));
+	m_mesh->draw();
 }

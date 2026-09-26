@@ -1,75 +1,91 @@
-# OpenGL 学习环境（Visual Studio 2026 / C++ / GLFW / GLAD）
+# 从 OpenGL 学习到 mini 游戏引擎
 
-基于你机器上的 **Visual Studio Community 2026** 搭建的 OpenGL 开发环境。
-第三方库（GLFW、GLAD）都在本目录内，不依赖任何系统级安装；编译器用的是
-VS 自带的 MSVC 工具集。
+这是一个"边学边造"的项目：从画第一个三角形开始，按商用引擎（Unity/UE/Godot）的
+架构思想——组件化、数据驱动材质、资源管理、多 pass 管线——一步步把手写 demo
+长成一个个人规模的 mini 游戏引擎，最后用它做出一个完整的小游戏。
+
+目标不是抄教程，而是通过亲手实现每一层，搞懂**游戏、引擎、渲染是怎么跑起来的**。
+
+- 路线图（怎么走、走到哪）：[ROADMAP.md](ROADMAP.md)
+- 学习日志（按日期的轨迹）：[learnLog.md](learnLog.md)
+- 带教约定（教学方式）：[AGENTS.md](AGENTS.md)
+
+## 当前进度
+
+**阶段 0~2 已完成，正在阶段 3「高级渲染 II」（HDR / PBR / 泛光）。**
+
+渲染能力：
+
+- 完整 Blinn-Phong 光照：点光 / 聚光 / 距离衰减 / 软边
+- 阴影贴图（shadow mapping）：PCF 软边、slope bias / 背面剔除 / normal offset 抗痤疮
+- HDR 天空盒：全景图（.hdr）→ cubemap 离线转换，方向采样、去平移、钉深度
+- 法线贴图：切线空间、TBN 矩阵、Lengyel 公式求切线
+- 帧缓冲后处理：离屏 RT → 全屏 quad → 灰度 / 反色 / 3×3 卷积锐化（F1~F3 切换）
+- lit uber shader：全部材质共用一个 shader，参数由材质 JSON 开关
+
+引擎架构：
+
+- Scene / SceneObject / Component 组件化结构，Transform 驱动 model 矩阵
+- Material 材质 JSON 数据驱动；ResourceLib 资源缓存（同名只加载一次）
+- Input（平台回调层）→ ActionMap（动作映射层）两级输入，电平 / 边沿两套查询
+- 手写 OBJ 加载器（扇形三角化、非法格式拒绝）；程序化 mesh（cube / sphere / ground）
 
 ## 快速开始
 
-1. 打开资源管理器，进入 `学习openGL\projects\01-hello-triangle\`
-2. 双击 **hello-triangle.sln** → Visual Studio 打开工程
-3. 按 **F5**（调试运行）或 **Ctrl+F5**（不调试直接运行）
+环境：Windows + Visual Studio（MSVC）。GLFW 3.4 与 GLAD 已内置于 `thirdparty/`，
+不依赖任何系统级安装。
 
-弹出窗口：一个左右摆动的彩色三角形，控制台同时打印你的 OpenGL 版本和
-显卡型号（RTX 3080 Ti / OpenGL 3.3）。按 **ESC** 退出。
+1. 进入 `projects/01-hello-triangle/`
+2. 双击 **hello-triangle.sln** 打开工程
+3. **F5** 调试运行（或 Ctrl+F5 直接运行）
 
-- 改完 `main.cpp` 直接再按 F5，VS 会自动重新编译。
-- 想打断点：点代码行左侧灰色边栏出现红点，按 F5，程序会在断点处停住，
-  可以看变量、单步执行——这是学 OpenGL 时最有用的调试手段。
-- glfw3.dll 会在每次编译后自动复制到输出目录，无需手动管理。
+操作：**WASD** 移动、**鼠标**转视角、**滚轮**缩放 fov、**F1/F2/F3** 切换
+灰度/反色/锐化后处理（再按一次还原）、**Esc** 退出。
 
-## 目录结构与大小
+命令行构建（不开 IDE）：`build-cmdline.cmd Debug` 或 `build-cmdline.cmd Release`。
 
-| 位置 | 大小 | 内容 |
-|---|---|---|
-| `projects/01-hello-triangle/` | <1M | demo 工程：main.cpp（逐行中文注释）+ .sln/.vcxproj 工程文件 + build-cmdline.cmd |
-| `thirdparty/glfw-3.4.bin.WIN64/` | ~10M | GLFW 窗口库（用到的是 include/ 和 lib-vc2022/） |
-| `thirdparty/glad/` | 1.5M | GLAD 加载器源码（glad.h + glad.c），你的程序 #include 它 |
-| `tools/glad-generator/` | 3.8M | Python 版 glad 生成器，以后要生成 OpenGL ES 版加载器时用 |
+## 当前场景
 
-## 工程文件说明
+棋盘格地面 + 金属立方体 + OBJ 角色模型 + 三颗球（法线贴图砖纹 / 金属自转 / 塑料）
++ HDR 天空云天 + 三盏灯（含正上方聚光投影）。全部由 `main.cpp` 的 `init()` 用
+「场景对象 + 组件 + 材质 JSON」拼装。
 
-- `hello-triangle.sln` —— 解决方案，双击它打开整个工程
-- `hello-triangle.vcxproj` —— 工程配置（Debug/Release × x64），已经配好：
-  - 头文件路径（GLAD、GLFW）
-  - 库路径（GLFW 的 lib-vc2022）和链接库（glfw3.lib、opengl32.lib 等）
-  - `/utf-8` 编译选项（main.cpp 是 UTF-8 编码，含中文注释）
-  - `/MD` 运行时库（与 GLFW 预编译库的 CRT 链接方式保持一致）
-  - 输出统一放 `build\` 目录，调试工作目录也指向输出目录
-- `build-cmdline.cmd` —— 不开 IDE 的命令行构建方式：
-  `build-cmdline.cmd Debug` 或 `build-cmdline.cmd Release`
+## 目录结构
 
-## demo 代码怎么读
+```
+学习openGL/
+├─ ROADMAP.md / learnLog.md / AGENTS.md   路线图 / 学习日志 / 带教约定
+├─ projects/01-hello-triangle/            主工程
+│  ├─ Client/                             全部 C++ 源码（引擎雏形 + 场景）
+│  ├─ asset/                              着色器、材质 JSON、贴图、模型、天空盒
+│  ├─ hello-triangle.sln / .vcxproj       VS 工程文件
+│  └─ build-cmdline.cmd                   命令行构建脚本
+├─ thirdparty/                            GLFW 3.4（bin）、GLAD（源码）
+└─ tools/glad-generator/                  glad 生成器（将来出 GLES 版加载器用）
+```
 
-`main.cpp` 按 5 个步骤组织，每步都有分隔注释：
+## 工程配置要点
 
-1. 初始化 GLFW，创建窗口（3.3 核心模式）
-2. 用 GLAD 加载所有 OpenGL 函数指针
-3. 编写着色器 + 上传顶点数据（VBO/VAO —— 现代 OpenGL 的核心概念）
-4. 渲染循环（清屏 → 设 uniform → 画三角形 → 交换缓冲）
-5. 清理资源
+- `hello-triangle.vcxproj`：`/utf-8`（源码含中文注释）、`/MD`（与 GLFW 预编译库
+  CRT 一致）、头/库路径指向 thirdparty、输出统一在 `build\`
+- 新建 `.cpp` 必须登记进 vcxproj 才会编译；新文件保存为 **UTF-8 带签名**
+- 着色器（`asset/shaders/`）是**运行时读取**的：改 GLSL 存盘后直接切回窗口即可
+  看效果，不需要重新编译 C++
+- glfw3.dll 每次编译自动复制到输出目录
 
-## 如何新建第二个练习工程
+## 学习资料
 
-最简单的方式：把 `01-hello-triangle` 文件夹整个复制一份、改名（如
-`02-shaders`），双击里面的 .sln 打开，把 main.cpp 换成教程新章节的代码
-即可（.sln/.vcxproj 里的路径都是相对路径，复制后依然有效；工程显示名
-仍叫 hello-triangle，不影响使用，想改可在 VS 里"重命名"）。
-
-## 学习路线建议
-
-本环境对应教程 **learnopengl**（官方中文版）：https://learnopengl-cn.github.io/
-
-建议顺序：入门 → 着色器 → 纹理 → 变换 → 坐标系统 → 摄像机 → 光照 →
-模型加载 → 高级 OpenGL。每章代码都可以用"复制工程文件夹"的方式直接实践。
-
-之后若转向 Android（OpenGL ES），`tools/glad-generator` 可重新生成 GLES
-版加载器，C++ 着色器知识全部通用。
+| 资料 | 用途 |
+|---|---|
+| [learnopengl 中文版](https://learnopengl-cn.github.io/) | 图形渲染主线教程，路线图逐章映射 |
+| [GAMES104《现代游戏引擎》](https://www.bilibili.com/)（B 站，王希） | 引擎架构理论：为什么这么设计 |
+| [Hazel 引擎（TheCherno）](https://github.com/TheCherno/Hazel) | 引擎实作参照，结构与路线几乎一一对应 |
+| [Piccolo（腾讯开源）](https://github.com/BoomingTech/Piccolo) | GAMES104 配套引擎，读源码用 |
+| [Poly Haven](https://polyhaven.com/) | 免费 HDR 全景图 / PBR 材质素材 |
 
 ## 常见问题
 
-- **按 F5 报"找不到 glfw3.dll"** → 先完整编译一次（Build → Build Solution），
-  编译后事件会自动复制 DLL。
-- **加载纹理时文件找不到**（以后会学到）→ 工程的调试工作目录已指向
-  `build\Debug\`，把图片放在 exe 旁边即可。
-- **VS 正在更新时编译失败** → 等 Visual Studio Installer 更新完成再编译。
+- **F5 报"找不到 glfw3.dll"** → 先完整 Build 一次，编译后事件会自动复制 DLL。
+- **改了 shader 没变化** → 确认存盘；shader 按路径缓存，重启程序即重新加载。
+- **新加的 cpp 报链接错误（找不到函数）** → 忘了登记进 vcxproj。
+- **画面异常先抓帧** → RenderDoc 打开 exe 抓一帧，看 drawcall 和绑定状态。

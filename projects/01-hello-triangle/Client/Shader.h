@@ -60,7 +60,6 @@ public:
         glAttachShader(ID, vertexShader);
         glAttachShader(ID, fs);
         glLinkProgram(ID);
-        checkProgramLink(ID);
 
         glDeleteShader(vertexShader);
         glDeleteShader(fs);
@@ -80,6 +79,10 @@ public:
     void setUniform3f(const char* name, float x, float y, float z)
     {
         glUniform3f(glGetUniformLocation(ID, name), x, y, z);
+    }
+    void setUniformMat4(const char* name, const glm::mat4& m)
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, glm::value_ptr(m));
     }
 
 private:

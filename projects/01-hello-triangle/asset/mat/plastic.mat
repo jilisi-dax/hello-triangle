@@ -1,8 +1,8 @@
 {
-    "vertex": "shaders/cube.vert",
-    "fragment": "shaders/cube.frag",
+    "vertex": "shaders/lit.vert",
+    "fragment": "shaders/lit.frag",
     "texture": "02.png",
     "color": [1.0, 1.0, 1.0],
-    "shininess": 16.0,
-    "specularStrength": 0.3
+    "shininess": 64,
+    "specularStrength": 1.0
 }

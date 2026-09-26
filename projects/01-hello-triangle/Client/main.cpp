@@ -7,6 +7,8 @@
 #include "Input.h" 
 #include "ResourceLib.h"
 #include "ActionMap.h"
+#include "Renderer.h"
+#include "renderComponent.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -14,11 +16,16 @@
 using namespace std;
 
 CameraComponent* g_mainCamera = nullptr;
+Scene scene;
+CameraComponent* cam = new CameraComponent();
+Renderer* renderer = nullptr;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 	if (g_mainCamera)
 		g_mainCamera->setAspect((float)width, (float)height);
 };
+
 
 int main()
 {
@@ -36,34 +43,90 @@ int main()
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	Input::Init(window);
-	ActionMap::Init();
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		LOG_ERROR("faild");
 		return -1;
 	}
+	renderer = new Renderer();
 
+	init(scene, window);
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
+	int fbw, fbh;
+	glfwGetFramebufferSize(window, &fbw, &fbh);
+	framebuffer_size_callback(window, fbw, fbh);
+	while (!glfwWindowShouldClose(window))
+	{
+		float currentFrame = (float)glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		Input::NewFrame();
+		glfwPollEvents();
+		processInput(*cam, deltaTime);
 
+		scene.update(deltaTime);
+		if (ActionMap::WasPressed(GameAction::EffectGray))    renderer->ToggleEffectMode(1);
+		if (ActionMap::WasPressed(GameAction::EffectInvert))  renderer->ToggleEffectMode(2);
+		if (ActionMap::WasPressed(GameAction::EffectSharpen)) renderer->ToggleEffectMode(3);
+		glfwGetFramebufferSize(window, &fbw, &fbh);
+		renderer->RenderFrame(scene, fbw, fbh);
+
+
+		glfwSwapBuffers(window);
+
+	}
+	
+	scene.clear(); 
+	ResourceLib::Shutdown();
+	delete renderer;
+	glfwTerminate();
+	return 0;
+
+
+
+
+
+}
+
+
+void init(Scene& scene, GLFWwindow* window)
+{
+
+	Input::Init(window);
+	ActionMap::Init();
 	SceneObject* cameraObj = new SceneObject();
-	CameraComponent* cam = new CameraComponent();
 	cameraObj->addComponent(cam);
-	Scene scene;
-	cubeModel* cube = new cubeModel();
-	scene.add(cube);
+	scene.add(new cubeModel());
 	scene.add(new metalCube());
 	scene.add(new modelObj());
 	scene.add(new ground());
 	scene.add(cameraObj);
 	scene.setMainCamera(cam);
+	//scene.setSkybox("skybox/mountain");
+	scene.setSkybox("skybox/polyhaven/kloofendal_48d_partly_cloudy_puresky_4k.hdr");
 	g_mainCamera = cam;
-	int fbw, fbh;
-	glfwGetFramebufferSize(window, &fbw, &fbh);
-	cam->setAspect((float)fbw, (float)fbh);
+	{
+		SceneObject* ball1 = new SceneObject();
+		ball1->SetPos(glm::vec3(-3.0f, -0.5f, -2.0f));
+		ball1->addComponent(new MeshRenderer("mat/ball_normal.mat", "builtin:sphere"));
+		scene.add(ball1);
+
+		SceneObject* ball2 = new SceneObject();
+		ball2->SetPos(glm::vec3(0.0f, -0.5f, -4.0f));
+		ball2->addComponent(new MeshRenderer("mat/metal.mat", "builtin:sphere"));
+		SpinComponent* spin = new SpinComponent();
+		spin->axis = glm::vec3(0.0f, 1.0f, 0.0f);
+		spin->speed = 30.0f;
+		ball2->addComponent(spin);
+		scene.add(ball2);
+
+		SceneObject* ball3 = new SceneObject();
+		ball3->SetPos(glm::vec3(3.0f, -0.5f, -2.0f));
+		ball3->addComponent(new MeshRenderer("mat/plastic.mat", "builtin:sphere"));
+		scene.add(ball3);
+	}
 
 	{
 		SceneObject* lightObj = new SceneObject();
@@ -91,41 +154,9 @@ int main()
 		l3->direction = glm::vec3(0.0f, -1.0f, 0.0f);
 		l3->cutoff = 0.976f;   // ≈ cos(12.5°)
 		l3->cutoffOuter = 0.92f;   // ≈ cos(23°)
+		l3->castShadow = true;
 		light3->addComponent(l3);
 		scene.add(light3);
 
 	}
-
-	while (!glfwWindowShouldClose(window))
-	{
-		float currentFrame = (float)glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-		Input::NewFrame();
-		processInput(*cam, deltaTime);
-
-
-		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		scene.update(deltaTime);
-		scene.render();
-
-
-
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-
-	}
-	
-	scene.clear(); 
-	ResourceLib::Shutdown();
-	glfwTerminate();
-	return 0;
-
-
-
-
-
 }
