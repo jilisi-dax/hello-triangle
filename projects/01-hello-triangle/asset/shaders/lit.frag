@@ -9,6 +9,7 @@ in vec3 Bitangent;
 
 out vec4 FragColor;
 
+#include "common.glsl"
 #include "lighting.glsl"
 
 uniform sampler2D ourTexture;
@@ -41,10 +42,11 @@ void main()
     }
     else
     {
-        albedo = texture(ourTexture, TexCoord).rgb * materialColor;
+        vec3 texColor = pow(texture(ourTexture, TexCoord).rgb, vec3(2.2));   // sRGB -> 线性
+        albedo = texColor * materialColor;
     }
 
-    float shadow = calcShadow(lightSpacePos, norm, normalize(-shadowLightDir));
+    float shadow = calcShadow(shadowMap, lightSpacePos, norm, normalize(-shadowLightDir));
     vec3 lighting = calcLighting(norm, FragPos, shadow);
     FragColor = vec4(albedo, 1.0) * vec4(lighting, 1.0);
 }

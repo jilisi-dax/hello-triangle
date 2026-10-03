@@ -8,8 +8,13 @@
 
 Renderer::Renderer()
 {
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	m_shadowMap = std::make_unique<ShadowMap>(1024, 1024);
 	m_framebuffer = std::make_unique<Framebuffer>(800, 800);
+	m_bloomA = std::make_unique<Framebuffer>(800, 800);
+	m_bloomB = std::make_unique<Framebuffer>(800, 800);
+	for (int i = 0; i < 4; i++)
+		m_bloomMip[i] = std::make_unique<Framebuffer>(800 >> (i + 1), 800 >> (i + 1));
 	float quadVerts[] = {  // pos2 + uv2
 		-1.0f, -1.0f,  0.0f, 0.0f,
 		 1.0f, -1.0f,  1.0f, 0.0f,
@@ -51,7 +56,10 @@ void Renderer::RenderFrame(Scene& scene, int fbw, int fbh)
 	RenderSkybox(scene);
 
 	m_framebuffer->End();
-	RenderPostEffect();
+	RenderBloomExtract(fbw, fbh);
+	RenderBloomDown(fbw, fbh);
+	RenderBloomUp(fbw, fbh);
+	RenderPostEffect(fbw, fbh);
 	//Framebuffer::BlitTo(m_framebuffer.get(), nullptr);
 
 	//DrawDebugDepth();
@@ -135,9 +143,11 @@ void Renderer::RenderSkybox(Scene& scene)
 		s->setUniformMat4("projection", cam->getProjection());
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, sky->GetID());
+		unsigned int showId = sky->GetID();
+		if (m_debugEnv == 1 && scene.env().irradianceTex) showId = scene.env().irradianceTex;
+		if (m_debugEnv == 2 && scene.env().prefilteredTex) showId = scene.env().prefilteredTex;
+		glBindTexture(GL_TEXTURE_CUBE_MAP, showId); //用天空盒当debug画板？
 		glUniform1i(glGetUniformLocation(s->getProgram(), "skybox"), 0);
-
 		cube->draw();
 	}
 
@@ -145,7 +155,7 @@ void Renderer::RenderSkybox(Scene& scene)
 	glDisable(GL_CULL_FACE);
 }
 
-void Renderer::RenderPostEffect()
+void Renderer::RenderPostEffect(int w, int h)
 {
 	Shader* s = ResourceLib::GetShader(
 		(getAssetPath() + "shaders/post.vert").c_str(),
@@ -153,13 +163,94 @@ void Renderer::RenderPostEffect()
 	if (!s) return;
 
 	s->UseProgram();
+	glViewport(0, 0, w, h);
 	glDisable(GL_DEPTH_TEST);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_framebuffer->GetColorTexture());
 	glUniform1i(glGetUniformLocation(s->getProgram(), "screenTex"), 0);
 	glUniform1i(glGetUniformLocation(s->getProgram(), "effectMode"), m_effectMode);
 
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_bloomA->GetColorTexture());
+	glUniform1i(glGetUniformLocation(s->getProgram(), "bloomTex"), 1);
+
 	glBindVertexArray(m_quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::RenderBloomExtract(int w, int h)
+{
+	Shader* s = ResourceLib::GetShader(
+		(getAssetPath() + "shaders/post.vert").c_str(),
+		(getAssetPath() + "shaders/brightExtract.frag").c_str());
+	if (!s) return;
+
+	m_bloomA->Begin(w, h);
+	s->UseProgram();
+	glDisable(GL_DEPTH_TEST);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_framebuffer->GetColorTexture());
+	glUniform1i(glGetUniformLocation(s->getProgram(), "screenTex"), 0);
+	glBindVertexArray(m_quadVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	m_bloomA->End();
+	glEnable(GL_DEPTH_TEST);
+
+}
+
+void Renderer::RenderBloomDown(int w, int h)
+{
+	Shader* s = ResourceLib::GetShader(
+		(getAssetPath() + "shaders/post.vert").c_str(),
+		(getAssetPath() + "shaders/util_down.frag").c_str());
+	if (!s) return;
+
+	s->UseProgram();
+	glDisable(GL_DEPTH_TEST);
+	glBindVertexArray(m_quadVAO);
+	glUniform1i(s->loc("screenTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	for (int i = 0; i < 4; i++)
+	{
+		unsigned int src = (i == 0) ? m_bloomA->GetColorTexture()
+			: m_bloomMip[i - 1]->GetColorTexture();
+		glBindTexture(GL_TEXTURE_2D, src);
+		m_bloomMip[i]->Begin(w >> (i + 1), h >> (i + 1));
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		m_bloomMip[i]->End();
+	}
+	glEnable(GL_DEPTH_TEST);
+}
+void Renderer::RenderBloomUp(int w, int h)
+{
+	Shader* s = ResourceLib::GetShader(
+		(getAssetPath() + "shaders/post.vert").c_str(),
+		(getAssetPath() + "shaders/util_up.frag").c_str());
+	if (!s) return;
+
+	s->UseProgram();
+	glDisable(GL_DEPTH_TEST);
+	glBindVertexArray(m_quadVAO);
+	glUniform1i(s->loc("screenTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
+
+	for (int i = 3; i > 0; i--)
+	{
+		glBindTexture(GL_TEXTURE_2D, m_bloomMip[i]->GetColorTexture());
+		m_bloomMip[i - 1]->Begin(w >> i, h >> i);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		m_bloomMip[i - 1]->End();
+	}
+
+	glBindTexture(GL_TEXTURE_2D, m_bloomMip[0]->GetColorTexture());
+	m_bloomA->Begin(w, h);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	m_bloomA->End();
+
+	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }

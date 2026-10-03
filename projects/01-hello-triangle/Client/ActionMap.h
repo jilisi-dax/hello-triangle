@@ -11,6 +11,8 @@ enum class GameAction
     EffectGray,
     EffectInvert,
     EffectSharpen,
+    EffectBloomDebug,
+    EffectIrradianceDebug,
 };
 
 class ActionMap

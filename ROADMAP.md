@@ -92,15 +92,15 @@
 对应 learnopengl「高级 OpenGL」后半 +「PBR」全部；同步看 GAMES104 渲染系统部分
 （渲染数据如何组织、材质与管线、Forward vs Deferred、可见性剔除），建立"为什么"层面的认知。
 
-- [ ] **HDR + tone mapping + gamma 校正**：RT 换 RGBA16F、Reinhard/ACES、
+- [x] **HDR + tone mapping + gamma 校正**：RT 换 RGBA16F、Reinhard/ACES、
       线性空间→sRGB 输出；PBR 的前置（PBR 输出线性 HDR，必须配色调映射）
-- [ ] **泛光 bloom**：亮度提取 → 高斯模糊 → 叠加；ping-pong 双 RT pass 管理
+- [x] **泛光 bloom**：亮度提取 → 高斯模糊 → 叠加；ping-pong 双 RT pass 管理
       实战首秀（合shader 方案在此到极限，引出"明确管理 pass"的架构）
-- [ ] **PBR 理论**：金属度/粗糙度工作流、Cook-Torrance BRDF、菲涅尔、能量守恒、
+- [x] **PBR 理论**：金属度/粗糙度工作流、Cook-Torrance BRDF、菲涅尔、能量守恒、
       与 Blinn-Phong 的本质区别（经验近似 → 物理量）
-- [ ] **PBR 直接光照**：lit shader 升级 PBR 版；Material 加 metallic/roughness；
+- [x] **PBR 直接光照**：lit shader 升级 PBR 版；Material 加 metallic/roughness；
       材质 JSON 扩展；Poly Haven 免费 PBR 材质素材
-- [ ] **IBL 基于图像的光照**：辐照度图 + 预滤波环境映射 + BRDF LUT，
+- [x] **IBL 基于图像的光照**：辐照度图 + 预滤波环境映射 + BRDF LUT，
       环境光从天空盒采样（金属反射天空的"高级感"来源）
 - [ ] **视差贴图**：法线贴图续集，bricks2_disp 素材已备
 - [ ] （选）几何着色器、MSAA、SSAO、延迟渲染认知课

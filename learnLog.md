@@ -43,3 +43,21 @@
 「2026-9-26」HDR 天空盒：全景图转 cubemap 管线验收。
 
 「2026-9-26」帧缓冲后处理：离屏渲染 Framebuffer + 全屏 quad 透传 + 效果开关（灰度/反色/锐化），主线完成。
+
+「2026-9-26」HDR/泛光：浮点画布、tone mapping、bloom 三段管线（亮度提取/高斯模糊 ping-pong/合成）、gamma 校正；环境光归场景级、sRGB 输入线性化。
+
+「2026-9-27」RenderDoc 抓帧：挂接捕获、事件/纹理/管线三视图入门，draw call 对账（25 次）与 HDR 浮点数值验证。
+
+「2026-9-27」PBR 直接光照：Cook-Torrance 三项（GGX 法线分布/菲涅尔/Smith 几何）+ metallic/roughness 工作流，金属/非金属对比球阵；HDR 高光出口钳与欠采样调参。
+
+「2026-9-27」PBR 材质贴图化：normal/metallic/roughness 贴图接入 PBR（出现即启用、3/4 号槽位），Poly Haven 金属板/瓷砖素材球验收通过，PBR 主线完结。
+
+「2026-10-1」IBL 环境光照三部曲：辐照度图（漫反射半球卷积）、GGX 重要性采样预滤波图（镜面按粗糙度分 mip 层）、BRDF LUT（split-sum 材质响应查表）；环境光从常数升级为真实环境响应，金属球镜面复活验收。
+
+「2026-10-1」抗闪烁调优：bloom 逐样本能量钳位、屏幕空间法线导数动态粗糙度下限（fwidth 方差补偿，自研）；cubemap 无缝过滤。
+
+「2026-10-2」灯光语义统一课：阴影归位只乘投影灯、PBR 接入聚光锥与阴影采样（calcShadow 上提 common.glsl）、range 衰减窗口消除硬截断跳变；能量来源辨析（直射光 vs IBL 环境光、调制因子分层）。
+
+「2026-10-2」bloom 金字塔重构：全分辨率多遍 ping-pong 换降采样塔（box 盒滤波）+ tent 上采样 additive 合成；踩 viewport 遗留坑（pass 自设状态原则）、反馈环（读写同纹理→additive blend 解法）、金字塔低频能量倍增（天空变亮→软阈值 knee 收紧提取）、降采样马赛克锯齿（九点盒）。
+
+「2026-10-3」AO 贴图与 ORM 三合一打包：环境光遮蔽只调环境光（可见度=环境光占比辨析）、glTF 通道约定实测与资产通道搬运（Poly Haven 反序陷阱）、材质参数三级优先级瀑布（标量→solo 贴图→ORM）、变体系统动机预热（sampler 槽位硬上限 vs 编译期裁剪）。

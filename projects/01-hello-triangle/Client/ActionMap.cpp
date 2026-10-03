@@ -18,6 +18,8 @@ void ActionMap::Init()
     b[GameAction::EffectGray] = { GLFW_KEY_F1 };
     b[GameAction::EffectInvert] = { GLFW_KEY_F2 };
     b[GameAction::EffectSharpen] = { GLFW_KEY_F3 };
+    b[GameAction::EffectBloomDebug] = { GLFW_KEY_F4 };
+    b[GameAction::EffectIrradianceDebug] = { GLFW_KEY_F5 };
 }
 
 bool ActionMap::IsDown(GameAction a)

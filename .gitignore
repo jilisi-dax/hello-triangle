@@ -14,6 +14,8 @@ Release/
 
 # 系统杂项
 Thumbs.db
+tools\RenderDoc-1.46-CN
+
 
 # 天空盒贴图（体积大，不入库）
 projects/01-hello-triangle/asset/skybox/

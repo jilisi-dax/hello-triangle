@@ -24,6 +24,38 @@ void Material::bind()
     glUniform3f(glGetUniformLocation(m_shader->getProgram(), "materialColor"), color.r, color.g, color.b);
     glUniform1f(glGetUniformLocation(m_shader->getProgram(), "shininess"), shininess);
     glUniform1f(glGetUniformLocation(m_shader->getProgram(), "specularStrength"), specularStrength);
+    glUniform1f(glGetUniformLocation(m_shader->getProgram(), "metallic"), metallic);
+    glUniform1f(glGetUniformLocation(m_shader->getProgram(), "roughness"), roughness);
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "metallicMapEnabled"), metallicMap ? 1 : 0);
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "metallicMap"), 3);
+    if (metallicMap)
+    {
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, metallicMap);
+    }
+
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "roughnessMapEnabled"), roughnessMap ? 1 : 0);
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "roughnessMap"), 4);
+    if (roughnessMap)
+    {
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, roughnessMap);
+    }
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "aoMapEnabled"), aoMap ? 1 : 0);
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "aoMap"), 8);
+    if (aoMap)
+    {
+        glActiveTexture(GL_TEXTURE8);
+        glBindTexture(GL_TEXTURE_2D, aoMap);
+    }
+
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "ormMapEnabled"), ormMap ? 1 : 0);
+    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "ormMap"), 9);
+    if (ormMap)
+    {
+        glActiveTexture(GL_TEXTURE9);
+        glBindTexture(GL_TEXTURE_2D, ormMap);
+    }
 }
 
 unsigned int Material::LoadTexture(const char* path)
@@ -38,9 +70,10 @@ unsigned int Material::LoadTexture(const char* path)
 
     int w, h, ch;
     unsigned char* data = stbi_load(path, &w, &h, &ch, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     if (data)
     {
-        GLenum fmt = (ch == 4) ? GL_RGBA : GL_RGB;
+        GLenum fmt = (ch == 4) ? GL_RGBA : (ch == 3) ? GL_RGB : (ch == 1) ? GL_RED : GL_RGB;
         glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
@@ -93,5 +126,15 @@ Material* Material::CreateFromJson(const char* matPath)
     m->shininess = j.value("shininess", 32.0f);
     m->specularStrength = j.value("specularStrength", 0.5f);
     m->albedoMode = j.value("albedoMode", 0);
+    if (j.contains("aoMap"))
+        m->aoMap = ResourceLib::GetTexture(j["aoMap"].get<std::string>().c_str());
+    m->metallic = j.value("metallic", 0.0f);
+    m->roughness = j.value("roughness", 0.5f);
+    if (j.contains("metallicMap"))
+        m->metallicMap = ResourceLib::GetTexture(j["metallicMap"].get<std::string>().c_str());
+    if (j.contains("roughnessMap"))
+        m->roughnessMap = ResourceLib::GetTexture(j["roughnessMap"].get<std::string>().c_str());
+    if (j.contains("ormMap"))
+        m->ormMap = ResourceLib::GetTexture(j["ormMap"].get<std::string>().c_str());
     return m;
 }

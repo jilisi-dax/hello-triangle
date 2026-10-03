@@ -108,6 +108,7 @@
     <ClCompile Include="Client\mesh.cpp" />
     <ClCompile Include="Client\renderComponent.cpp" />
     <ClCompile Include="Client\role.cpp" />
+    <ClCompile Include="Client\Shader.cpp" />
     <ClCompile Include="Client\ShadowMap.cpp" />
     <ClCompile Include="Client\sys.cpp" />
     <ClCompile Include="Client\TextureCube.cpp" />

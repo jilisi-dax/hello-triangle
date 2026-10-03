@@ -12,7 +12,7 @@ public:
 	Mesh* m_mesh = nullptr;
 	Material* m_material = nullptr;
 
-	void draw(CameraComponent& cam, std::vector<LightComponent*>& lights, const ShadowFrame& shadow) override;
+	void draw(CameraComponent& cam, std::vector<LightComponent*>& lights, const ShadowFrame& shadow, const EnvFrame& env) override;
 	void drawDepth(const glm::mat4& lightSpaceMat) override;
 };
 

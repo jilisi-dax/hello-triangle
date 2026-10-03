@@ -6,6 +6,8 @@ class TextureCube
 public:
     TextureCube(const char* const faces[6]);
     static TextureCube* CreateFromEquirect(const char* equirectPath);
+    static TextureCube* CreateIrradiance(unsigned int envCubeId, int faceSize = 32);
+    static TextureCube* CreatePrefiltered(unsigned int envCubeId, int faceSize = 128);
     ~TextureCube();
 
 

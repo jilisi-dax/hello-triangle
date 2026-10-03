@@ -42,7 +42,7 @@ void Scene::render()
 {
     collectLights();
     for (auto obj : Objects)
-        obj->draw(*m_mainCamera, m_lights ,m_shadow);
+        obj->draw(*m_mainCamera, m_lights, m_shadow, m_env);
 }
 void Scene::renderDepth(const glm::mat4& lightSpaceMat)
 {
@@ -52,6 +52,12 @@ void Scene::renderDepth(const glm::mat4& lightSpaceMat)
 void Scene::setSkybox(const char* cubemapDir)
 {
     m_skybox = ResourceLib::GetSkybox(cubemapDir);
+    TextureCube* irr = ResourceLib::GetIrradiance(cubemapDir);
+    TextureCube* pre = ResourceLib::GetPrefiltered(cubemapDir);
+    m_env.enabled = (irr && pre);
+    if (irr) m_env.irradianceTex = irr->GetID();
+    if (pre) m_env.prefilteredTex = pre->GetID();
+    m_env.brdfLutTex = ResourceLib::GetBrdfLut();
 }
 
 void Scene::clear()

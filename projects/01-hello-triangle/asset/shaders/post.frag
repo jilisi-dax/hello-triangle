@@ -3,11 +3,14 @@ in vec2 UV;
 out vec4 FragColor;
 
 uniform sampler2D screenTex;
-uniform int effectMode;   // 0=原样 1=灰度 2=反色 3=锐化
+uniform int effectMode;   // 0=原样 1=灰度 2=反色 3=锐化 4=bloom提取(调试)
+uniform sampler2D bloomTex;
+uniform float bloomStrength = 1.0;
 
 void main()
 {
     vec4 color = texture(screenTex, UV);
+    color.rgb += texture(bloomTex, UV).rgb * bloomStrength;
     if (effectMode == 1)
     {
         float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
@@ -33,6 +36,12 @@ void main()
                 sum += kernel[i++] * texture(screenTex, UV + vec2(dx, dy) * texel).rgb;
         color = vec4(sum, color.a);
     }
-
+    else if (effectMode == 4)
+    {
+        color = texture(bloomTex, UV);
+    }
+    color.rgb = max(color.rgb, vec3(0.0));
+    color.rgb = color.rgb / (color.rgb + vec3(1.0));
+    color.rgb = pow(color.rgb, vec3(1.0 / 2.2));
     FragColor = color;
 }

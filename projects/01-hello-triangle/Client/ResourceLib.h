@@ -13,5 +13,8 @@ public:
 	static Shader* GetShader(const char* vert, const char* frag);
 	static unsigned int GetTexture(const char* path);
 	static TextureCube* GetSkybox(const char* dir);
+	static TextureCube* GetIrradiance(const char* dir);
+	static TextureCube* GetPrefiltered(const char* dir);
+	static unsigned int GetBrdfLut();
 	static void Shutdown();
 };

@@ -13,6 +13,12 @@ public:
 	float specularStrength = 0.5f;
 	unsigned int normalMap = 0;
 	int albedoMode = 0;   // 表皮模式：0=纹理 1=checker（将来映射 shader 变体）
+	float metallic = 0.0f;
+	float roughness = 0.5f;
+	unsigned int metallicMap = 0;
+	unsigned int roughnessMap = 0;
+	unsigned int aoMap = 0; //Occlusion / Roughness / Metallic
+	unsigned int ormMap = 0;
 
 	~Material() {}
 
