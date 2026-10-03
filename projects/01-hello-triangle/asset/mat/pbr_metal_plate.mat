@@ -1,0 +1,12 @@
+{
+    "vertex": "shaders/lit.vert",
+    "fragment": "shaders/pbr.frag",
+    "texture": "textures/pbr/metal_plate_02_diff_1k.jpg",
+    "normalMap": "textures/pbr/metal_plate_02_nor_gl_1k.jpg",
+    "metallicMap": "textures/pbr/metal_plate_02_metal_1k.jpg",
+    "roughnessMap": "textures/pbr/metal_plate_02_rough_1k.jpg",
+    "color": [1.0, 1.0, 1.0],
+    "metallic": 1.0,
+    "roughness": 0.5,
+    "albedoMode": 0
+}

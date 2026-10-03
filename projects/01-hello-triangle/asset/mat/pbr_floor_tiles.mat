@@ -1,0 +1,11 @@
+{
+    "vertex": "shaders/lit.vert",
+    "fragment": "shaders/pbr.frag",
+    "texture": "textures/pbr/blue_floor_tiles_01_diff_1k.jpg",
+    "normalMap": "textures/pbr/blue_floor_tiles_01_nor_gl_1k.jpg",
+    "ormMap": "textures/pbr/blue_floor_tiles_01_orm_1k.jpg",
+    "color": [1.0, 1.0, 1.0],
+    "metallic": 0.0,
+    "roughness": 0.5,
+    "albedoMode": 0
+}

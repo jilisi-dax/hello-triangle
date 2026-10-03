@@ -57,7 +57,7 @@
       <!-- /utf-8: main.cpp 是 UTF-8 编码(含中文注释)；/MD: 与 GLFW 预编译库的 CRT 链接方式保持一致，避免 LNK4098/LNK2019 -->
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)Client;$(SolutionDir)..\..\thirdparty;$(SolutionDir)..\..\thirdparty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(ProjectDir)engine;$(ProjectDir)game;$(SolutionDir)..\..\thirdparty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)..\..\thirdparty;$(SolutionDir)Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)..\..\thirdparty;$(ProjectDir)engine;$(ProjectDir)game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,45 +94,49 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client\ActionMap.cpp" />
-    <ClCompile Include="Client\camera.cpp" />
-    <ClCompile Include="Client\Framebuffer.cpp" />
-    <ClCompile Include="Client\Material.cpp" />
-    <ClCompile Include="Client\Renderer.cpp" />
-    <ClCompile Include="Client\ResourceLib.cpp" />
-    <ClCompile Include="Client\Scene.cpp" />
-    <ClCompile Include="Client\Input.cpp" />
-    <ClCompile Include="Client\keyBoard.cpp" />
+    <ClCompile Include="engine\platform\ActionMap.cpp" />
+    <ClCompile Include="engine\scene\components\CameraComponent.cpp" />
+    <ClCompile Include="engine\render\Framebuffer.cpp" />
+    <ClCompile Include="engine\render\Material.cpp" />
+    <ClCompile Include="engine\render\Renderer.cpp" />
+    <ClCompile Include="engine\render\ResourceLib.cpp" />
+    <ClCompile Include="engine\scene\Scene.cpp" />
+    <ClCompile Include="engine\scene\SceneObject.cpp" />
+    <ClCompile Include="engine\platform\Input.cpp" />
+    <ClCompile Include="engine\platform\KeyBoard.cpp" />
     <ClCompile Include="..\..\thirdparty\glad\src\glad.c" />
-    <ClCompile Include="Client\main.cpp" />
-    <ClCompile Include="Client\mesh.cpp" />
-    <ClCompile Include="Client\renderComponent.cpp" />
-    <ClCompile Include="Client\role.cpp" />
-    <ClCompile Include="Client\Shader.cpp" />
-    <ClCompile Include="Client\ShadowMap.cpp" />
-    <ClCompile Include="Client\sys.cpp" />
-    <ClCompile Include="Client\TextureCube.cpp" />
+    <ClCompile Include="game\main.cpp" />
+    <ClCompile Include="engine\render\Mesh.cpp" />
+    <ClCompile Include="engine\scene\components\MeshRendererComponent.cpp" />
+    <ClCompile Include="game\Role.cpp" />
+    <ClCompile Include="engine\render\Shader.cpp" />
+    <ClCompile Include="engine\render\ShadowMap.cpp" />
+    <ClCompile Include="engine\platform\Paths.cpp" />
+    <ClCompile Include="engine\render\TextureCube.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client\ActionMap.h" />
-    <ClInclude Include="Client\camera.h" />
-    <ClInclude Include="Client\Framebuffer.h" />
-    <ClInclude Include="Client\Material.h" />
-    <ClInclude Include="Client\Renderer.h" />
-    <ClInclude Include="Client\ResourceLib.h" />
-    <ClInclude Include="Client\Scene.h" />
-    <ClInclude Include="Client\Input.h" />
-    <ClInclude Include="Client\keyBoard.h" />
-    <ClInclude Include="Client\log.h" />
-    <ClInclude Include="Client\main.h" />
-    <ClInclude Include="Client\mesh.h" />
-    <ClInclude Include="Client\pch.h" />
-    <ClInclude Include="Client\renderComponent.h" />
-    <ClInclude Include="Client\role.h" />
-    <ClInclude Include="Client\Shader.h" />
-    <ClInclude Include="Client\ShadowMap.h" />
-    <ClInclude Include="Client\sys.h" />
-    <ClInclude Include="Client\TextureCube.h" />
+    <ClInclude Include="engine\platform\ActionMap.h" />
+    <ClInclude Include="engine\scene\components\CameraComponent.h" />
+    <ClInclude Include="engine\render\Framebuffer.h" />
+    <ClInclude Include="engine\core\def.h" />
+    <ClInclude Include="game\Game.h" />
+    <ClInclude Include="engine\core\Log.h" />
+    <ClInclude Include="engine\render\Material.h" />
+    <ClInclude Include="engine\render\Mesh.h" />
+    <ClInclude Include="engine\core\pch.h" />
+    <ClInclude Include="engine\render\Renderer.h" />
+    <ClInclude Include="engine\render\ResourceLib.h" />
+    <ClInclude Include="engine\platform\Paths.h" />
+    <ClInclude Include="engine\platform\Input.h" />
+    <ClInclude Include="engine\platform\KeyBoard.h" />
+    <ClInclude Include="engine\scene\Scene.h" />
+    <ClInclude Include="engine\scene\SceneObject.h" />
+    <ClInclude Include="engine\scene\LightComponent.h" />
+    <ClInclude Include="engine\scene\components\MeshRendererComponent.h" />
+    <ClInclude Include="game\Role.h" />
+    <ClInclude Include="engine\render\Shader.h" />
+    <ClInclude Include="engine\render\ShadowMap.h" />
+    <ClInclude Include="engine\render\TextureCube.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

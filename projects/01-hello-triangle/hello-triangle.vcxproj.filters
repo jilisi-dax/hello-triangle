@@ -1,132 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{C239CF7F-E731-42F2-AE2F-939559090B1D}</UniqueIdentifier>
+    <Filter Include="core">
+      <UniqueIdentifier>{eeb8913c-2a98-46d5-828f-c194450005ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    <Filter Include="platform">
+      <UniqueIdentifier>{4618911f-5d1e-494b-888c-a2b90deb5346}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\shader">
-      <UniqueIdentifier>{00b37559-be61-4c94-8ea4-dcf1ed282e14}</UniqueIdentifier>
+    <Filter Include="render">
+      <UniqueIdentifier>{a39d6fdd-ee93-48c4-8071-e8f82b90b85a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Scene">
-      <UniqueIdentifier>{dbf84e40-17e6-4227-8256-26ca1769e99d}</UniqueIdentifier>
+    <Filter Include="scene">
+      <UniqueIdentifier>{efe6a161-e235-4378-86d9-f52855939a6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\components">
+      <UniqueIdentifier>{f2e49b42-6bfc-4197-bc01-988908adffa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{0c28b037-ef95-4f1c-b425-e3bb018feb2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{d0ca1c39-e425-42ea-94c9-c666bf8a1774}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="engine\platform\ActionMap.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\scene\components\CameraComponent.cpp">
+      <Filter>scene\components</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\render\Framebuffer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\render\Material.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\render\Renderer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\render\ResourceLib.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\scene\Scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\scene\SceneObject.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\platform\Input.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\platform\KeyBoard.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\thirdparty\glad\src\glad.c">
-      <Filter>ThirdParty</Filter>
+      <Filter>thirdparty</Filter>
     </ClCompile>
-    <ClCompile Include="Client\main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="game\main.cpp">
+      <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="Client\camera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="engine\render\Mesh.cpp">
+      <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="Client\keyBoard.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="engine\scene\components\MeshRendererComponent.cpp">
+      <Filter>scene\components</Filter>
     </ClCompile>
-    <ClCompile Include="Client\role.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="game\Role.cpp">
+      <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="Client\Scene.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="engine\render\Shader.cpp">
+      <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="Client\Input.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="engine\render\ShadowMap.cpp">
+      <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="Client\ActionMap.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="engine\platform\Paths.cpp">
+      <Filter>platform</Filter>
     </ClCompile>
-    <ClCompile Include="Client\mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\sys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\ResourceLib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\ShadowMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\renderComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\TextureCube.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client\Shader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="engine\render\TextureCube.cpp">
+      <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client\main.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\platform\ActionMap.h">
+      <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="Client\Shader.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\scene\components\CameraComponent.h">
+      <Filter>scene\components</Filter>
     </ClInclude>
-    <ClInclude Include="Client\camera.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\render\Framebuffer.h">
+      <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="Client\keyBoard.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\core\def.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="Client\role.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="game\Game.h">
+      <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="Client\pch.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\core\Log.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="Client\sys.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\render\Material.h">
+      <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="Client\Scene.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\render\Mesh.h">
+      <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="Client\Input.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\core\pch.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="Client\ActionMap.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\render\Renderer.h">
+      <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="Client\log.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\render\ResourceLib.h">
+      <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="Client\mesh.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\platform\Paths.h">
+      <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="Client\Material.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\platform\Input.h">
+      <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="Client\ResourceLib.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\platform\KeyBoard.h">
+      <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="Client\ShadowMap.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\scene\Scene.h">
+      <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="Client\Renderer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\scene\SceneObject.h">
+      <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="Client\renderComponent.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\scene\LightComponent.h">
+      <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="Client\TextureCube.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="engine\scene\components\MeshRendererComponent.h">
+      <Filter>scene\components</Filter>
     </ClInclude>
-    <ClInclude Include="Client\Framebuffer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="game\Role.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\render\Shader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\render\ShadowMap.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\render\TextureCube.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

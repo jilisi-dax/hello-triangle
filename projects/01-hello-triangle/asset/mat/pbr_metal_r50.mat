@@ -1,0 +1,8 @@
+{
+    "vertex": "shaders/lit.vert",
+    "fragment": "shaders/pbr.frag",
+    "color": [1.0, 0.77, 0.34],
+    "metallic": 1.0,
+    "roughness": 0.50,
+    "albedoMode": 2
+}
