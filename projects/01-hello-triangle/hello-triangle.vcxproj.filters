@@ -1,153 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="core">
-      <UniqueIdentifier>{eeb8913c-2a98-46d5-828f-c194450005ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="platform">
-      <UniqueIdentifier>{4618911f-5d1e-494b-888c-a2b90deb5346}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="render">
-      <UniqueIdentifier>{a39d6fdd-ee93-48c4-8071-e8f82b90b85a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="scene">
-      <UniqueIdentifier>{efe6a161-e235-4378-86d9-f52855939a6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="scene\components">
-      <UniqueIdentifier>{f2e49b42-6bfc-4197-bc01-988908adffa2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="game">
       <UniqueIdentifier>{0c28b037-ef95-4f1c-b425-e3bb018feb2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="thirdparty">
-      <UniqueIdentifier>{d0ca1c39-e425-42ea-94c9-c666bf8a1774}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="engine\platform\ActionMap.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\scene\components\CameraComponent.cpp">
-      <Filter>scene\components</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\render\Framebuffer.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\render\Material.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\render\Renderer.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\render\ResourceLib.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\scene\Scene.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\scene\SceneObject.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\platform\Input.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\platform\KeyBoard.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\thirdparty\glad\src\glad.c">
-      <Filter>thirdparty</Filter>
+    <ClCompile Include="game\Game.cpp">
+      <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="game\main.cpp">
       <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="engine\render\Mesh.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\scene\components\MeshRendererComponent.cpp">
-      <Filter>scene\components</Filter>
-    </ClCompile>
     <ClCompile Include="game\Role.cpp">
       <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="engine\render\Shader.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\render\ShadowMap.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\platform\Paths.cpp">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\render\TextureCube.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="engine\platform\ActionMap.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\scene\components\CameraComponent.h">
-      <Filter>scene\components</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\Framebuffer.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\core\def.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="game\Game.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="engine\core\Log.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\Material.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\Mesh.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\core\pch.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\Renderer.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\ResourceLib.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\platform\Paths.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\platform\Input.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\platform\KeyBoard.h">
-      <Filter>platform</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\scene\Scene.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\scene\SceneObject.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\scene\LightComponent.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\scene\components\MeshRendererComponent.h">
-      <Filter>scene\components</Filter>
-    </ClInclude>
     <ClInclude Include="game\Role.h">
       <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\Shader.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\ShadowMap.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render\TextureCube.h">
-      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

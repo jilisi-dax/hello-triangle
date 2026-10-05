@@ -2,6 +2,7 @@
 #include "platform/Paths.h"
 #include <cstring>
 #include "render/TextureCube.h"
+#include "render/Texture2D.h"
 
 static std::unordered_map<std::string, std::unique_ptr<Mesh>>& MeshCache()
 {
@@ -11,9 +12,9 @@ static std::unordered_map<std::string, std::unique_ptr<Shader>>& ShaderCache()
 {
 	static std::unordered_map<std::string, std::unique_ptr<Shader>> c; return c;
 }
-static std::unordered_map<std::string, unsigned int>& TexCache()
+static std::unordered_map<std::string, Texture2D*>& TexCache()
 {
-	static std::unordered_map<std::string, unsigned int> c; return c;
+	static std::unordered_map<std::string, Texture2D*> c; return c;
 }
 static std::unordered_map<std::string, std::unique_ptr<Material>>& MatCache()
 {
@@ -58,8 +59,8 @@ Shader* ResourceLib::GetShader(const char* vert, const char* frag)
 	if (it != ShaderCache().end()) return
 		it->second.get();
 
-	Shader* s = new Shader(vert, frag);
-	if (!s->m_valid)
+	Shader* s = Shader::Create(vert, frag);
+	if (!s->IsValid())
 	{
 		delete s;
 		return nullptr;
@@ -69,12 +70,12 @@ Shader* ResourceLib::GetShader(const char* vert, const char* frag)
 	return s;
 }
 
-unsigned int ResourceLib::GetTexture(const char* path)
+Texture2D* ResourceLib::GetTexture(const char* path)
 {
 	auto it = TexCache().find(path);
 	if (it != TexCache().end()) return it->second;
 
-	unsigned int t = Material::LoadTexture((getAssetPath() + path).c_str());
+	Texture2D* t = Texture2D::Create((getAssetPath() + path).c_str());   // 缓存 key 用原始相对路径，加载补资产根
 	if (t)
 	{
 		TexCache()[path] = t;
@@ -105,7 +106,7 @@ TextureCube* ResourceLib::GetSkybox(const char* dir)
 		const char* fp[6] = {
 			paths[0].c_str(), paths[1].c_str(), paths[2].c_str(),
 			paths[3].c_str(), paths[4].c_str(), paths[5].c_str() };
-		t = new TextureCube(fp);
+		t = TextureCube::Create(fp);
 	}
 	if (!t || !t->IsValid()) { delete t; return nullptr; }
 	SkyboxCache()[dir] = std::unique_ptr<TextureCube>(t);
@@ -121,7 +122,7 @@ TextureCube* ResourceLib::GetIrradiance(const char* dir)
 	TextureCube* sky = GetSkybox(dir);
 	if (!sky || !sky->IsValid()) return nullptr;
 
-	TextureCube* t = TextureCube::CreateIrradiance(sky->GetID());
+	TextureCube* t = TextureCube::CreateIrradiance(*sky);
 	if (!t) return nullptr;
 	IrradianceCache()[dir] = std::unique_ptr<TextureCube>(t);
 	LOG_INFO("Irradiance first bake: %s", dir);
@@ -136,71 +137,11 @@ TextureCube* ResourceLib::GetPrefiltered(const char* dir)
 	TextureCube* sky = GetSkybox(dir);
 	if (!sky || !sky->IsValid()) return nullptr;
 
-	TextureCube* t = TextureCube::CreatePrefiltered(sky->GetID());
+	TextureCube* t = TextureCube::CreatePrefiltered(*sky);
 	if (!t) return nullptr;
 	PrefilteredCache()[dir] = std::unique_ptr<TextureCube>(t);
 	LOG_INFO("Prefiltered first bake: %s", dir);
 	return t;
-}
-
-unsigned int ResourceLib::GetBrdfLut()
-{
-	static unsigned int s_lut = 0;
-	if (s_lut) return s_lut;
-	Shader* s = ResourceLib::GetShader(
-		(getAssetPath() + "shaders/post.vert").c_str(),
-		(getAssetPath() + "shaders/util_brdf_lut.frag").c_str()
-	);
-	if (!s) return 0;
-
-	float quad[] = {
-		-1.0f, -1.0f,  0.0f, 0.0f,
-		 1.0f, -1.0f,  1.0f, 0.0f,
-		 1.0f,  1.0f,  1.0f, 1.0f,
-		-1.0f, -1.0f,  0.0f, 0.0f,
-		 1.0f,  1.0f,  1.0f, 1.0f,
-		-1.0f,  1.0f,  0.0f, 1.0f,
-	};
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-	glBindVertexArray(0);
-
-	unsigned int tex, fbo;
-	glGenTextures(1, &tex);
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, GL_RG, GL_FLOAT, nullptr);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-	glViewport(0, 0, 512, 512);
-	glDisable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	s->UseProgram();
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteBuffers(1, &VBO);
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteFramebuffers(1, &fbo);
-
-	LOG_INFO("BrdfLut baked: 512x512");
-	s_lut = tex;
-	return s_lut;
 }
 
 Material* ResourceLib::GetMaterial(const char* key)
@@ -226,8 +167,7 @@ void ResourceLib::Shutdown()
 	SkyboxCache().clear();
 	IrradianceCache().clear();
 	PrefilteredCache().clear();
-	for (auto& kv : TexCache()) glDeleteTextures(1, &kv.second);
-	TexCache().clear();
+	TexCache().clear();   // unique_ptr 自动 delete 资源对象，析构里对称删 GL 纹理
 	
 }
 
@@ -236,3 +176,11 @@ void ResourceLib::Shutdown()
 
 
 
+
+Texture2D* ResourceLib::GetBrdfLut()
+{
+	static Texture2D* s_lut = nullptr;
+	if (!s_lut)
+		s_lut = Texture2D::CreateBrdfLut();
+	return s_lut;
+}

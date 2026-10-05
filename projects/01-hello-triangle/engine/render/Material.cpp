@@ -1,92 +1,59 @@
 #include "render/Material.h"
 #include "render/ResourceLib.h"
+#include "render/Texture2D.h"
 #include "platform/Paths.h"
 
 void Material::bind()
 {
-    glUseProgram(m_shader->getProgram());
+    m_shader->UseProgram();
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "ourTexture"), 0);
+    if (diffuseMap)
+        diffuseMap->Bind(0);
+    m_shader->setUniform1i("ourTexture", 0);
 
-    glUniform1f(glGetUniformLocation(m_shader->getProgram(), "cellSize"), cellSize);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "albedoMode"), albedoMode);
+    m_shader->setUniform1f("cellSize", cellSize);
+    m_shader->setUniform1i("albedoMode", albedoMode);
 
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "normalMapEnabled"), normalMap ? 1 : 0);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "normalMap"), 2);
+    m_shader->setUniform1i("normalMapEnabled", normalMap ? 1 : 0);
+    m_shader->setUniform1i("normalMap", 2);
     if (normalMap)
     {
-        glActiveTexture(GL_TEXTURE2);   // 0 号是漫反射、1 号阴影深度图，法线贴图 2 号
-        glBindTexture(GL_TEXTURE_2D, normalMap);
+        normalMap->Bind(2);   // 0 号是漫反射、1 号阴影深度图，法线贴图 2 号
     }
 
-    glUniform3f(glGetUniformLocation(m_shader->getProgram(), "materialColor"), color.r, color.g, color.b);
-    glUniform1f(glGetUniformLocation(m_shader->getProgram(), "shininess"), shininess);
-    glUniform1f(glGetUniformLocation(m_shader->getProgram(), "specularStrength"), specularStrength);
-    glUniform1f(glGetUniformLocation(m_shader->getProgram(), "metallic"), metallic);
-    glUniform1f(glGetUniformLocation(m_shader->getProgram(), "roughness"), roughness);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "metallicMapEnabled"), metallicMap ? 1 : 0);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "metallicMap"), 3);
+    m_shader->setUniform3f("materialColor", color.r, color.g, color.b);
+    m_shader->setUniform1f("shininess", shininess);
+    m_shader->setUniform1f("specularStrength", specularStrength);
+    m_shader->setUniform1f("metallic", metallic);
+    m_shader->setUniform1f("roughness", roughness);
+    m_shader->setUniform1i("metallicMapEnabled", metallicMap ? 1 : 0);
+    m_shader->setUniform1i("metallicMap", 3);
     if (metallicMap)
     {
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, metallicMap);
+        metallicMap->Bind(3);
     }
 
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "roughnessMapEnabled"), roughnessMap ? 1 : 0);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "roughnessMap"), 4);
+    m_shader->setUniform1i("roughnessMapEnabled", roughnessMap ? 1 : 0);
+    m_shader->setUniform1i("roughnessMap", 4);
     if (roughnessMap)
     {
-        glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D, roughnessMap);
+        roughnessMap->Bind(4);
     }
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "aoMapEnabled"), aoMap ? 1 : 0);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "aoMap"), 8);
+    m_shader->setUniform1i("aoMapEnabled", aoMap ? 1 : 0);
+    m_shader->setUniform1i("aoMap", 8);
     if (aoMap)
     {
-        glActiveTexture(GL_TEXTURE8);
-        glBindTexture(GL_TEXTURE_2D, aoMap);
+        aoMap->Bind(8);
     }
 
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "ormMapEnabled"), ormMap ? 1 : 0);
-    glUniform1i(glGetUniformLocation(m_shader->getProgram(), "ormMap"), 9);
+    m_shader->setUniform1i("ormMapEnabled", ormMap ? 1 : 0);
+    m_shader->setUniform1i("ormMap", 9);
     if (ormMap)
     {
-        glActiveTexture(GL_TEXTURE9);
-        glBindTexture(GL_TEXTURE_2D, ormMap);
+        ormMap->Bind(9);
     }
 }
 
-unsigned int Material::LoadTexture(const char* path)
-{
-    unsigned int tex = 0;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int w, h, ch;
-    unsigned char* data = stbi_load(path, &w, &h, &ch, 0);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    if (data)
-    {
-        GLenum fmt = (ch == 4) ? GL_RGBA : (ch == 3) ? GL_RGB : (ch == 1) ? GL_RED : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        LOG_ERROR("Texture load error: %s", path);
-        glDeleteTextures(1, &tex);
-        tex = 0;   // 失败返回 0，调用方才拦得住
-    }
-    stbi_image_free(data);
-    return tex;
-
-}
 
 Material* Material::CreateFromJson(const char* matPath)
 {

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <ProjectGuid>{4EC75C08-F002-4651-B3CB-C2B395CBA83C}</ProjectGuid>
+    <RootNamespace>engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\obj\engine\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <Optimization>Disabled</Optimization>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)..\..\thirdparty\Jolt\include;$(SolutionDir)..\..\thirdparty;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <ConformanceMode>true</ConformanceMode>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\thirdparty\glad\include;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\include;$(SolutionDir)..\..\thirdparty\glm;$(SolutionDir)..\..\thirdparty\stb;$(SolutionDir)..\..\thirdparty\Jolt\include;$(SolutionDir)..\..\thirdparty;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="platform\ActionMap.cpp" />
+    <ClCompile Include="platform\Input.cpp" />
+    <ClCompile Include="platform\Paths.cpp" />
+    <ClCompile Include="platform\Time.cpp" />
+    <ClCompile Include="platform\Window.cpp" />
+    <ClCompile Include="render\Material.cpp" />
+    <ClCompile Include="render\Mesh.cpp" />
+    <ClCompile Include="render\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="render\OpenGLTextureCube.cpp" />
+    <ClCompile Include="render\OpenGLMesh.cpp" />
+    <ClCompile Include="render\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="render\OpenGLTexture2D.cpp" />
+    <ClCompile Include="render\Renderer.cpp" />
+    <ClCompile Include="render\RendererAPI.cpp" />
+    <ClCompile Include="render\ResourceLib.cpp" />
+    <ClCompile Include="render\Shader.cpp" />
+    <ClCompile Include="render\OpenGLShader.cpp" />
+    <ClCompile Include="scene\Scene.cpp" />
+    <ClCompile Include="scene\SceneObject.cpp" />
+    <ClCompile Include="scene\components\CameraComponent.cpp" />
+    <ClCompile Include="scene\components\MeshRendererComponent.cpp" />
+    <ClCompile Include="..\..\..\thirdparty\glad\src\glad.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\Log.h" />
+    <ClInclude Include="core\def.h" />
+    <ClInclude Include="core\pch.h" />
+    <ClInclude Include="platform\ActionMap.h" />
+    <ClInclude Include="platform\Input.h" />
+    <ClInclude Include="platform\Paths.h" />
+    <ClInclude Include="platform\Time.h" />
+    <ClInclude Include="platform\Window.h" />
+    <ClInclude Include="render\Framebuffer.h" />
+    <ClInclude Include="render\Material.h" />
+    <ClInclude Include="render\Mesh.h" />
+    <ClInclude Include="render\OpenGLFramebuffer.h" />
+    <ClInclude Include="render\OpenGLMesh.h" />
+    <ClInclude Include="render\OpenGLRendererAPI.h" />
+    <ClInclude Include="render\OpenGLTexture2D.h" />
+    <ClInclude Include="render\OpenGLTextureCube.h" />
+    <ClInclude Include="render\Renderer.h" />
+    <ClInclude Include="render\RendererAPI.h" />
+    <ClInclude Include="render\ResourceLib.h" />
+    <ClInclude Include="render\Shader.h" />
+    <ClInclude Include="render\OpenGLShader.h" />
+    <ClInclude Include="render\Texture.h" />
+    <ClInclude Include="render\Texture2D.h" />
+    <ClInclude Include="render\TextureCube.h" />
+    <ClInclude Include="scene\Scene.h" />
+    <ClInclude Include="scene\SceneObject.h" />
+    <ClInclude Include="scene\LightComponent.h" />
+    <ClInclude Include="scene\components\CameraComponent.h" />
+    <ClInclude Include="scene\components\MeshRendererComponent.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,8 +1,8 @@
 #pragma once
 #include "core/pch.h"
-#include "render/ShadowMap.h"
 #include <memory>
 #include "render/Framebuffer.h"
+#include "render/RendererAPI.h"
 
 class Scene;
 
@@ -25,11 +25,13 @@ private:
 	void RenderBloomUp(int w, int h);
 	void RenderSkybox(Scene& scene);
 
-	std::unique_ptr<ShadowMap> m_shadowMap;
+	std::unique_ptr<Framebuffer> m_shadowMap;
 	std::unique_ptr<Framebuffer> m_framebuffer;
 	std::unique_ptr<Framebuffer> m_bloomA;   // bloom ping-pong A
 	std::unique_ptr<Framebuffer> m_bloomB;	// bloom ping-pong B
 	std::unique_ptr<Framebuffer> m_bloomMip[4];   // bloom 降采样塔 1/2 ~ 1/16
+	std::unique_ptr<RendererAPI> m_api;
+
 	unsigned int m_quadVAO = 0;
 	unsigned int m_quadVBO = 0;
 

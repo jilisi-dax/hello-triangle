@@ -15,6 +15,7 @@ Release/
 # 系统杂项
 Thumbs.db
 tools\RenderDoc-1.46-CN
+JoltPhysics-src
 
 
 # 天空盒贴图（体积大，不入库）

@@ -1,21 +1,11 @@
 #pragma once
-#include "core/pch.h"
+#include "render/Texture.h"
 
-class TextureCube
+class TextureCube : public Texture
 {
 public:
-    TextureCube(const char* const faces[6]);
-    static TextureCube* CreateFromEquirect(const char* equirectPath);
-    static TextureCube* CreateIrradiance(unsigned int envCubeId, int faceSize = 32);
-    static TextureCube* CreatePrefiltered(unsigned int envCubeId, int faceSize = 128);
-    ~TextureCube();
-
-
-    bool IsValid() const { return m_id != 0; }
-    unsigned int GetID() const { return m_id; }
-
-private:
-    unsigned int m_id = 0;
-
-    explicit TextureCube(unsigned int prebuiltId) : m_id(prebuiltId) {}
+	static TextureCube* Create(const char* const faces[6]);
+	static TextureCube* CreateFromEquirect(const char* equirectPath);
+	static TextureCube* CreateIrradiance(const TextureCube& env, int faceSize = 32);
+	static TextureCube* CreatePrefiltered(const TextureCube& env, int faceSize = 128);
 };

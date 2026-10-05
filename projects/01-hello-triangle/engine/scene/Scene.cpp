@@ -46,13 +46,13 @@ void Scene::renderDepth(const glm::mat4& lightSpaceMat)
 }
 void Scene::setSkybox(const char* cubemapDir)
 {
-    m_skybox = ResourceLib::GetSkybox(cubemapDir);
-    TextureCube* irr = ResourceLib::GetIrradiance(cubemapDir);
-    TextureCube* pre = ResourceLib::GetPrefiltered(cubemapDir);
-    m_env.enabled = (irr && pre);
-    if (irr) m_env.irradianceTex = irr->GetID();
-    if (pre) m_env.prefilteredTex = pre->GetID();
-    m_env.brdfLutTex = ResourceLib::GetBrdfLut();
+	m_skybox = ResourceLib::GetSkybox(cubemapDir);
+	TextureCube* irr = ResourceLib::GetIrradiance(cubemapDir);
+	TextureCube* pre = ResourceLib::GetPrefiltered(cubemapDir);
+	m_env.enabled = (irr && pre);
+	if (irr) m_env.irradiance = irr;      // 直接存对象，不再取 id
+	if (pre) m_env.prefiltered = pre;
+	m_env.brdfLut = ResourceLib::GetBrdfLut();
 }
 
 void Scene::clear()

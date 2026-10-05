@@ -6,16 +6,18 @@
 #include "render/Shader.h"
 #include "render/TextureCube.h"
 #include "scene/components/CameraComponent.h"
+#include "render/OpenGLRendererAPI.h"
 
 Renderer::Renderer()
 {
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	m_shadowMap = std::make_unique<ShadowMap>(1024, 1024);
-	m_framebuffer = std::make_unique<Framebuffer>(800, 800);
-	m_bloomA = std::make_unique<Framebuffer>(800, 800);
-	m_bloomB = std::make_unique<Framebuffer>(800, 800);
+	m_api.reset(RendererAPI::Create());
+	m_api->Init();
+	m_shadowMap.reset(Framebuffer::Create(1024, 1024, true));
+	m_framebuffer.reset(Framebuffer::Create(800, 800));
+	m_bloomA.reset(Framebuffer::Create(800, 800));
+	m_bloomB.reset(Framebuffer::Create(800, 800));
 	for (int i = 0; i < 4; i++)
-		m_bloomMip[i] = std::make_unique<Framebuffer>(800 >> (i + 1), 800 >> (i + 1));
+		m_bloomMip[i].reset(Framebuffer::Create(800 >> (i + 1), 800 >> (i + 1)));
 	float quadVerts[] = {  // pos2 + uv2
 		-1.0f, -1.0f,  0.0f, 0.0f,
 		 1.0f, -1.0f,  1.0f, 0.0f,
@@ -48,11 +50,10 @@ void Renderer::RenderFrame(Scene& scene, int fbw, int fbh)
 	scene.shadowInfo().enabled = false;
 	RenderShadowMap(scene);
 	m_framebuffer->Begin(fbw, fbh);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	m_api->SetDepthTest(true);
+	m_api->SetCullFace(true, CullMode::Back);
+	m_api->SetClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	m_api->ClearColorDepth();
 	scene.render();
 	RenderSkybox(scene);
 
@@ -82,10 +83,9 @@ void Renderer::RenderShadowMap(Scene& scene)
 		glm::vec3(0.0f, 0.0f, -1.0f)
 	);
 	glm::mat4 lightSpaceMatrix = lightProj * lightView;
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
-	m_shadowMap->Begin();
+	m_api->SetDepthTest(true);
+	m_api->SetCullFace(true, CullMode::Front);
+	m_shadowMap->Begin(1024, 1024);
 	{
 		Shader* s = ResourceLib::GetShader(
 			(getAssetPath() + "shaders/shadowMap.vert").c_str(),
@@ -96,12 +96,12 @@ void Renderer::RenderShadowMap(Scene& scene)
 		s->setUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
 		scene.renderDepth(lightSpaceMatrix);
 	}
-	glDisable(GL_CULL_FACE);
+	m_api->SetCullFace(false);
 	m_shadowMap->End();
 	ShadowFrame& sh = scene.shadowInfo();
 	sh.enabled = true;
 	sh.lightSpaceMat = lightSpaceMatrix;
-	sh.depthTex = m_shadowMap->GetDepthTexture();
+	sh.shadowRT = m_shadowMap.get();
 	sh.lightDir = shadowLight->direction;
 }
 
@@ -114,9 +114,9 @@ void Renderer::DrawDebugDepth()
 	if (!s) return;
 
 	s->UseProgram();
-	glDisable(GL_DEPTH_TEST);
+	m_api->SetDepthTest(false);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_shadowMap->GetDepthTexture());
+	m_shadowMap->BindDepth(0);
 	s->setUniform1i("depthMap", 0);
 	glBindVertexArray(m_quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -128,9 +128,8 @@ void Renderer::RenderSkybox(Scene& scene)
 	if (!sky || !sky->IsValid()) return;
 
 	// 天空盒 pass 自依赖的状态自己设，不信任别的 pass 留下的
-	glDepthFunc(GL_LEQUAL);   // 深度被钉在 1.0，默认 LESS 会被远平面自己挡掉
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);     // 相机在盒子内部，看得见的是"内表面"
+	m_api->SetDepthFunc(DepthFunc::LEqual);   // 深度被钉在 1.0，默认 LESS 会被远平面自己挡掉
+	m_api->SetCullFace(true, CullMode::Front);		 // 相机在盒子内部，看得见的是"内表面"
 
 	Shader* s = ResourceLib::GetShader(
 		(getAssetPath() + "shaders/skybox.vert").c_str(),
@@ -144,16 +143,18 @@ void Renderer::RenderSkybox(Scene& scene)
 		s->setUniformMat4("projection", cam->getProjection());
 
 		glActiveTexture(GL_TEXTURE0);
-		unsigned int showId = sky->GetID();
-		if (m_debugEnv == 1 && scene.env().irradianceTex) showId = scene.env().irradianceTex;
-		if (m_debugEnv == 2 && scene.env().prefilteredTex) showId = scene.env().prefilteredTex;
-		glBindTexture(GL_TEXTURE_CUBE_MAP, showId); //用天空盒当debug画板？
-		glUniform1i(glGetUniformLocation(s->getProgram(), "skybox"), 0);
+		if (m_debugEnv == 1 && scene.env().irradiance)
+			scene.env().irradiance->Bind(0);
+		else if
+			(m_debugEnv == 2 && scene.env().prefiltered) scene.env().prefiltered->Bind(0);
+		else
+			sky->Bind(0); //用天空盒当debug画板？
+		s->setUniform1i("skybox", 0);
 		cube->draw();
 	}
 
-	glDepthFunc(GL_LESS);
-	glDisable(GL_CULL_FACE);
+	m_api->SetDepthFunc(DepthFunc::Less);
+	m_api->SetCullFace(false);
 }
 
 void Renderer::RenderPostEffect(int w, int h)
@@ -164,20 +165,20 @@ void Renderer::RenderPostEffect(int w, int h)
 	if (!s) return;
 
 	s->UseProgram();
-	glViewport(0, 0, w, h);
-	glDisable(GL_DEPTH_TEST);
+	m_api->SetViewport(0, 0, w, h);
+	m_api->SetDepthTest(false);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_framebuffer->GetColorTexture());
-	glUniform1i(glGetUniformLocation(s->getProgram(), "screenTex"), 0);
-	glUniform1i(glGetUniformLocation(s->getProgram(), "effectMode"), m_effectMode);
+	m_framebuffer->BindColor(0);
+	s->setUniform1i("screenTex", 0);
+	s->setUniform1i("effectMode", m_effectMode);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_bloomA->GetColorTexture());
-	glUniform1i(glGetUniformLocation(s->getProgram(), "bloomTex"), 1);
+	m_bloomMip[2]->BindColor(1);
+	s->setUniform1i("bloomTex", 1);
 
 	glBindVertexArray(m_quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glEnable(GL_DEPTH_TEST);
+	m_api->SetDepthTest(true);
 }
 
 void Renderer::RenderBloomExtract(int w, int h)
@@ -189,14 +190,14 @@ void Renderer::RenderBloomExtract(int w, int h)
 
 	m_bloomA->Begin(w, h);
 	s->UseProgram();
-	glDisable(GL_DEPTH_TEST);
+	m_api->SetDepthTest(false);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_framebuffer->GetColorTexture());
-	glUniform1i(glGetUniformLocation(s->getProgram(), "screenTex"), 0);
+	m_framebuffer->BindColor(0);
+	s->setUniform1i("screenTex", 0);
 	glBindVertexArray(m_quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_bloomA->End();
-	glEnable(GL_DEPTH_TEST);
+	m_api->SetDepthTest(true);
 
 }
 
@@ -208,20 +209,19 @@ void Renderer::RenderBloomDown(int w, int h)
 	if (!s) return;
 
 	s->UseProgram();
-	glDisable(GL_DEPTH_TEST);
+	m_api->SetDepthTest(false);
 	glBindVertexArray(m_quadVAO);
-	glUniform1i(s->loc("screenTex"), 0);
+	s->setUniform1i("screenTex", 0);
 	glActiveTexture(GL_TEXTURE0);
 	for (int i = 0; i < 4; i++)
 	{
-		unsigned int src = (i == 0) ? m_bloomA->GetColorTexture()
-			: m_bloomMip[i - 1]->GetColorTexture();
-		glBindTexture(GL_TEXTURE_2D, src);
+		Framebuffer* src = (i == 0) ? m_bloomA.get() : m_bloomMip[i - 1].get();
+		src->BindColor(0);
 		m_bloomMip[i]->Begin(w >> (i + 1), h >> (i + 1));
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		m_bloomMip[i]->End();
 	}
-	glEnable(GL_DEPTH_TEST);
+	m_api->SetDepthTest(true);
 }
 void Renderer::RenderBloomUp(int w, int h)
 {
@@ -231,27 +231,27 @@ void Renderer::RenderBloomUp(int w, int h)
 	if (!s) return;
 
 	s->UseProgram();
-	glDisable(GL_DEPTH_TEST);
+	m_api->SetDepthTest(false);
 	glBindVertexArray(m_quadVAO);
-	glUniform1i(s->loc("screenTex"), 0);
+	s->setUniform1i("screenTex", 0);
 	glActiveTexture(GL_TEXTURE0);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE);
+	m_api->SetBlend(true);
+	m_api->SetBlendFunc(BlendFactor::One, BlendFactor::One);
 
 	for (int i = 3; i > 0; i--)
 	{
-		glBindTexture(GL_TEXTURE_2D, m_bloomMip[i]->GetColorTexture());
+		m_bloomMip[i]->BindColor(0);
 		m_bloomMip[i - 1]->Begin(w >> i, h >> i);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		m_bloomMip[i - 1]->End();
 	}
 
-	glBindTexture(GL_TEXTURE_2D, m_bloomMip[0]->GetColorTexture());
+	m_bloomMip[0]->BindColor(0);
 	m_bloomA->Begin(w, h);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_bloomA->End();
 
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
+	m_api->SetBlend(false);
+	m_api->SetDepthTest(true);
 }

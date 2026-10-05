@@ -4,6 +4,8 @@ VisualStudioVersion = 18.0.0.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hello-triangle", "hello-triangle.vcxproj", "{43DC4046-A066-47F6-9E8B-4AC8E12291B3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine\engine.vcxproj", "{4EC75C08-F002-4651-B3CB-C2B395CBA83C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -14,6 +16,10 @@ Global
 		{43DC4046-A066-47F6-9E8B-4AC8E12291B3}.Debug|x64.Build.0 = Debug|x64
 		{43DC4046-A066-47F6-9E8B-4AC8E12291B3}.Release|x64.ActiveCfg = Release|x64
 		{43DC4046-A066-47F6-9E8B-4AC8E12291B3}.Release|x64.Build.0 = Release|x64
+		{4EC75C08-F002-4651-B3CB-C2B395CBA83C}.Debug|x64.ActiveCfg = Debug|x64
+		{4EC75C08-F002-4651-B3CB-C2B395CBA83C}.Debug|x64.Build.0 = Debug|x64
+		{4EC75C08-F002-4651-B3CB-C2B395CBA83C}.Release|x64.ActiveCfg = Release|x64
+		{4EC75C08-F002-4651-B3CB-C2B395CBA83C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

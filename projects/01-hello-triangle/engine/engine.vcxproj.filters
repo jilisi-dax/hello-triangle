@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{dbc87f5b-e6ec-4337-afc2-dba38f8d5bc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{14090c60-f35b-4da3-929c-23f39411df19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{739912ad-d71b-433e-8d6a-84cb67cfaf54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{3fbb1f5d-afcf-446e-8be3-9e8421422c6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\components">
+      <UniqueIdentifier>{5b0a16f9-89ea-4a8c-86d5-bd8c49f3663e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{108066a5-a20c-4670-92f2-bee6f70eb0b7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="platform\ActionMap.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\Input.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\Paths.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\Time.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\Window.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Framebuffer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Material.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Mesh.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\OpenGLMesh.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\OpenGLRendererAPI.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\OpenGLShader.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Renderer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\RendererAPI.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\ResourceLib.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Shader.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\SceneObject.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\components\CameraComponent.cpp">
+      <Filter>scene\components</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\components\MeshRendererComponent.cpp">
+      <Filter>scene\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\thirdparty\glad\src\glad.c">
+      <Filter>thirdparty</Filter>
+    </ClCompile>
+    <ClCompile Include="render\OpenGLFramebuffer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\OpenGLTexture2D.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\OpenGLTextureCube.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\Log.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\def.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\pch.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\ActionMap.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\Input.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\Paths.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\Time.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\Window.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Framebuffer.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Material.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Mesh.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\OpenGLMesh.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\OpenGLRendererAPI.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\OpenGLShader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Renderer.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\RendererAPI.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\ResourceLib.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Shader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\TextureCube.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\SceneObject.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\LightComponent.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\components\CameraComponent.h">
+      <Filter>scene\components</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\components\MeshRendererComponent.h">
+      <Filter>scene\components</Filter>
+    </ClInclude>
+    <ClInclude Include="render\OpenGLFramebuffer.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\OpenGLTexture2D.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\OpenGLTextureCube.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Texture.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Texture2D.h">
+      <Filter>render</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

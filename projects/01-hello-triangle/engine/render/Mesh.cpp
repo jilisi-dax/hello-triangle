@@ -1,38 +1,5 @@
-#pragma once
 #include "render/Mesh.h"
-
-
-void Mesh::build(const std::vector<float>& verts)
-{
-    unsigned int stepSize = 11 * sizeof(float);
-    vertexCount = (int)verts.size() / 11;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), verts.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stepSize, (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stepSize, (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stepSize, (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, stepSize, (void*)(8 * sizeof(float)));
-    glEnableVertexAttribArray(3);
-    glBindVertexArray(0);
-}
-
-void Mesh::build(const std::vector<float>& verts, const std::vector<unsigned int>& indices)
-{
-    build(verts);
-    useIndex = true;
-    vertexCount = (int)indices.size();
-    glGenBuffers(1, &EBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-    glBindVertexArray(0);
-}
+#include "render/OpenGLMesh.h"
 
 Mesh* Mesh::CreateCube()
 {
@@ -91,9 +58,7 @@ Mesh* Mesh::CreateCube()
             verts.insert(verts.end(), faceT[face], faceT[face] + 3);
         }
     std::vector<unsigned int> indices(std::begin(cubeIndices), std::end(cubeIndices));
-    Mesh* m = new Mesh();
-    m->build(verts, indices);
-    return m;
+    return new OpenGLMesh(verts, indices);
 }
 
 Mesh* Mesh::CreateGround()
@@ -116,9 +81,7 @@ Mesh* Mesh::CreateGround()
         verts.push_back(src[2] / TILE);
         verts.push_back(1.0f); verts.push_back(0.0f); verts.push_back(0.0f);
     }
-    Mesh* m = new Mesh();
-    m->build(verts);
-    return m;
+    return new OpenGLMesh(verts);
 }
 
 Mesh* Mesh::CreateSphere(int stacks, int slices)
@@ -161,18 +124,14 @@ Mesh* Mesh::CreateSphere(int stacks, int slices)
             indices.push_back(b); indices.push_back(d); indices.push_back(c);
         }
     }
-    Mesh* m = new Mesh();
-    m->build(verts, indices);
-    return m;
+    return new OpenGLMesh(verts, indices);
 }
 
 Mesh* Mesh::LoadOBJ(const char* path)
 {
     std::vector<float> verts;
     if (!ParseOBJ(path, verts)) return nullptr;
-    Mesh* m = new Mesh();
-    m->build(verts);
-    return m;
+    return new OpenGLMesh(verts);
 }
 
 bool Mesh::ParseOBJ(const char* path, std::vector<float>& vertices)
@@ -182,7 +141,7 @@ bool Mesh::ParseOBJ(const char* path, std::vector<float>& vertices)
     std::vector<glm::vec3> normals;
     std::string line;
     std::ifstream file(path);
-    if (!file.is_open()) return false; 
+    if (!file.is_open()) return false;
 
     while (std::getline(file, line))
     {

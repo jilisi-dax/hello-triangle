@@ -5,22 +5,23 @@ class SceneObject;
 class CameraComponent;
 class LightComponent;
 class TextureCube;
+class Texture2D;
+class Framebuffer;
 
 struct ShadowFrame
 {
 	bool enabled = false;
 	glm::mat4 lightSpaceMat = glm::mat4(1.0f);
 	glm::vec3 lightDir = glm::vec3(0.0f, -1.0f, 0.0f);
-	unsigned int depthTex = 0;
+	Framebuffer* shadowRT = nullptr;   // 原 depthTex 裸句柄
 };
 
 struct EnvFrame
 {
 	bool enabled = false;
-	unsigned int irradianceTex = 0;   // 漫反射环境（辐照度图）
-	unsigned int prefilteredTex = 0;  // 镜面环境（预滤波图）
-	unsigned int brdfLutTex = 0;
-
+	TextureCube* irradiance = nullptr;
+	TextureCube* prefiltered = nullptr;
+	Texture2D* brdfLut = nullptr;
 };
 
 class Scene

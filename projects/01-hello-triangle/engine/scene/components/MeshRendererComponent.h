@@ -28,7 +28,7 @@ public:
 		m_meshPath = "role/Forest_Spr/Forest_Spr_50k.obj";
 		m_mesh = ResourceLib::GetMesh(m_meshPath.c_str());
 		if (!m_mesh) { LOG_ERROR("Mesh load error: %s", m_meshPath.c_str()); return; }
-		LOG_INFO("Mesh vertices count: %d", m_mesh->vertexCount);
+		LOG_INFO("Mesh vertices count: %d", m_mesh->VertexCount());
 	}
 };
 

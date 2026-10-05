@@ -61,8 +61,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\thirdparty\Jolt\lib;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>$(SolutionDir)..\..\thirdparty\Jolt\lib;
+      <AdditionalDependencies>Jolt.lib;glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\lib-vc2022\glfw3.dll" "$(OutDir)"</Command>
@@ -85,8 +85,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\thirdparty\Jolt\lib;$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>$(SolutionDir)..\..\thirdparty\Jolt\lib;
+      <AdditionalDependencies>Jolt.lib;glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)..\..\thirdparty\glfw-3.4.bin.WIN64\lib-vc2022\glfw3.dll" "$(OutDir)"</Command>
@@ -94,49 +94,18 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="engine\platform\ActionMap.cpp" />
-    <ClCompile Include="engine\scene\components\CameraComponent.cpp" />
-    <ClCompile Include="engine\render\Framebuffer.cpp" />
-    <ClCompile Include="engine\render\Material.cpp" />
-    <ClCompile Include="engine\render\Renderer.cpp" />
-    <ClCompile Include="engine\render\ResourceLib.cpp" />
-    <ClCompile Include="engine\scene\Scene.cpp" />
-    <ClCompile Include="engine\scene\SceneObject.cpp" />
-    <ClCompile Include="engine\platform\Input.cpp" />
-    <ClCompile Include="engine\platform\KeyBoard.cpp" />
-    <ClCompile Include="..\..\thirdparty\glad\src\glad.c" />
+    <ClCompile Include="game\Game.cpp" />
     <ClCompile Include="game\main.cpp" />
-    <ClCompile Include="engine\render\Mesh.cpp" />
-    <ClCompile Include="engine\scene\components\MeshRendererComponent.cpp" />
     <ClCompile Include="game\Role.cpp" />
-    <ClCompile Include="engine\render\Shader.cpp" />
-    <ClCompile Include="engine\render\ShadowMap.cpp" />
-    <ClCompile Include="engine\platform\Paths.cpp" />
-    <ClCompile Include="engine\render\TextureCube.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="engine\platform\ActionMap.h" />
-    <ClInclude Include="engine\scene\components\CameraComponent.h" />
-    <ClInclude Include="engine\render\Framebuffer.h" />
-    <ClInclude Include="engine\core\def.h" />
+    <ProjectReference Include="engine\engine.vcxproj">
+      <Project>{4ec75c08-f002-4651-b3cb-c2b395cba83c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="game\Game.h" />
-    <ClInclude Include="engine\core\Log.h" />
-    <ClInclude Include="engine\render\Material.h" />
-    <ClInclude Include="engine\render\Mesh.h" />
-    <ClInclude Include="engine\core\pch.h" />
-    <ClInclude Include="engine\render\Renderer.h" />
-    <ClInclude Include="engine\render\ResourceLib.h" />
-    <ClInclude Include="engine\platform\Paths.h" />
-    <ClInclude Include="engine\platform\Input.h" />
-    <ClInclude Include="engine\platform\KeyBoard.h" />
-    <ClInclude Include="engine\scene\Scene.h" />
-    <ClInclude Include="engine\scene\SceneObject.h" />
-    <ClInclude Include="engine\scene\LightComponent.h" />
-    <ClInclude Include="engine\scene\components\MeshRendererComponent.h" />
     <ClInclude Include="game\Role.h" />
-    <ClInclude Include="engine\render\Shader.h" />
-    <ClInclude Include="engine\render\ShadowMap.h" />
-    <ClInclude Include="engine\render\TextureCube.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
